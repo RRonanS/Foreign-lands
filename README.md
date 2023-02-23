@@ -12,7 +12,7 @@ Projeto de jogo RPG 2D em Python com uso da framework PyGame
     
     - Uso de poções
     
-    - Mercado com coins
+    - Mercado com coins via npcs mercadores
     
     - Evolução do jogador
     
@@ -27,3 +27,5 @@ Projeto de jogo RPG 2D em Python com uso da framework PyGame
   - Salvamento do jogo(Json)
   
   - Personalização básica do cenário do jogo(Json)
+
+  - Início da criacão do sistema de Npcs
