@@ -1,0 +1,30 @@
+{"personagem":
+  {
+    "nivel": 0,
+    "skills": [0, 0, 0, 0],
+    "vida": 0,
+    "pontos": 0,
+    "coins": 0,
+    "exp": 0,
+    "pos": [0, 0],
+    "cenario": [0, 0],
+    "acesso": [[]]
+  },
+  "inimigos":
+  {
+    "1":
+    {
+      "pos": [],
+      "vida": 0,
+      "tipo": ""
+    }
+  },
+  "npcs":
+  {
+    "1":
+    {
+      "pos": [],
+      "tipo": ""
+    }
+  }
+}

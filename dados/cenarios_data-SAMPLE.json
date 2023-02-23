@@ -1,0 +1,15 @@
+{
+  "1 1":
+  {
+    "flags": {
+      "acesso": true,
+      "lock": true,
+      "background": 0,
+      "final": []
+    },
+    "blocos": [],
+    "decoracoes": {
+      "1": []
+    }
+  }
+}
