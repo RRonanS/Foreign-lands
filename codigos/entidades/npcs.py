@@ -21,7 +21,8 @@ imagens = {
     },
     'Mercador':{
         'idle':
-            img_load(pygame.image.load('arquivos/imagens/mercador/mercador.png').convert_alpha(), (48, 48), (48, 48))
+            None
+            #img_load(pygame.image.load('arquivos/imagens/mercador/mercador.png').convert_alpha(), (48, 48), (48, 48))
     }
 }
 
