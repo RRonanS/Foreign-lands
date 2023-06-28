@@ -2,6 +2,10 @@
 
 Projeto de jogo RPG 2D em Python com uso da framework PyGame
 
+Pasta com executáveis:
+
+https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sharing
+
 # Release 0.1 (23/02/2023)
 
   - Sistemas base de:
