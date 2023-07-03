@@ -3,8 +3,16 @@ import pygame.sprite
 from codigos.ambiente.textuais import fonte1, amarelo
 
 dir = 'arquivos/imagens/itens/'
-imagens = {'vida': pygame.transform.scale(pygame.image.load(dir+'pocao_vida.png').convert_alpha(), (32, 32))}
-diretorios = {'vida': dir+'pocao_vida.png'}
+imagens = {
+    'vida': pygame.transform.scale(pygame.image.load(dir + 'pocao_vida.png').convert_alpha(), (32, 32)),
+    'vidagrande': pygame.transform.scale(pygame.image.load(dir + 'pocao_vida2.png').convert_alpha(), (32, 32)),
+    'velocidade': pygame.transform.scale(pygame.image.load(dir + 'pocao_velocidade.png').convert_alpha(), (32, 32)),
+    'dano': pygame.transform.scale(pygame.image.load(dir + 'pocao_dano.png').convert_alpha(), (32, 32))
+}
+diretorios = {'vida': dir + 'pocao_vida.png',
+              'vidagrande': dir + 'pocao_vida2.png',
+              'velocidade': dir + 'pocao_velocidade.png',
+              'dano': dir + 'pocao_dano.png'}
 
 
 class Item(pygame.sprite.Sprite):
@@ -34,21 +42,34 @@ class Item(pygame.sprite.Sprite):
         self.image.blit(img, (0, 0))
         self.image.blit(qnt, (0, 0))
 
+    def as_drop(self):
+        """Metodo chamado quando o item será mostrado como drop"""
+        try:
+            self.image = pygame.transform.scale(self.img, (16, 16))
+            self.rect = self.image.get_rect()
+        except:
+            raise ValueError('Problema ao criar icone de item:', self)
+
 
 class Pocao(Item):
     """Classe genérica para um item poção, ou seja pode ser consumido em troca de determinado efeito"""
+
     def __init__(self, sprite=False, icon=None):
         Item.__init__(self, sprite, icon)
         self.atributo = ''
         self.img = ''
         self.tipo = 'pocao'
         self.bonus = 0
+        self.timer = None
 
     def usar(self, personagem):
         """Override do metodo usar"""
         if self.atributo != '' and self.quantidade > 0:
             func = getattr(personagem, self.atributo)
-            do = func(self.bonus)
+            if self.timer is None:
+                do = func(self.bonus)
+            else:
+                do = func(self.bonus, self.timer)
             if do:
                 self.quantidade -= 1
                 self.create_sprite(self.img, False)
@@ -58,13 +79,55 @@ class Pocao(Item):
 
 class Pocao_vida(Pocao):
     """Subclasse específica referente a uma poção de vida, que ao consumida aumenta a vida atual do personagem"""
+
     def __init__(self):
+        # Do_menu indica se ela é um exibivel de menu
         Pocao.__init__(self)
         self.atributo = 'aumentar_vida'
         self.nome = 'Poção de cura'
         self.img_sg = diretorios['vida']
         self.img = imagens['vida']
         self.bonus = 10
-        self.valor = 10
+        self.valor = 15
         self.classe = 'Pocao_vida'
+        self.create_sprite(self.img)
+
+
+class Pocao_vidaGrande(Pocao_vida):
+    """Pocao de vida maior"""
+
+    def __init__(self):
+        Pocao_vida.__init__(self)
+        self.img_sg = diretorios['vidagrande']
+        self.img = imagens['vidagrande']
+        self.nome = 'Poção de cura G'
+        self.classe = 'Pocao_vidaGrande'
+        self.bonus = 20
+        self.valor = 27
+        self.create_sprite(self.img)
+
+
+class Pocao_velocidade(Pocao):
+    """Pocao que aumenta temporariamente a velocidade do jogador"""
+    def __init__(self):
+        Pocao.__init__(self)
+        self.timer = 60  # Em segundos
+        self.bonus = 2
+        self.valor = 50
+        self.atributo = 'aumentar_vel'
+        self.img_sg = diretorios['velocidade']
+        self.img = imagens['velocidade']
+        self.create_sprite(self.img)
+
+
+class Pocao_dano(Pocao):
+    """Pocao que aumenta temporariamente o dano do jogador"""
+    def __init__(self):
+        Pocao.__init__(self)
+        self.timer = 30  # Em segundos
+        self.bonus = 3
+        self.valor = 100
+        self.atributo = 'aumentar_dano'
+        self.img_sg = diretorios['dano']
+        self.img = imagens['dano']
         self.create_sprite(self.img)

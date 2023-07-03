@@ -1,18 +1,21 @@
 import pygame
 from pygame.locals import *
 from sys import exit
+from codigos.ambiente.gerenciador_musicas import GerenciadorMusica
+from codigos.ambiente.sons import mercador_saudar
 from codigos.entidades.personagem import Personagem
-from codigos.variaveis import screen_size, musica, imortal, block_size, colide, fps, \
-    colide_tolerancia as tolerancia, tamanho_barra_itens
+from codigos.variaveis import screen_size, imortal, block_size, colide, fps, \
+    colide_tolerancia as tolerancia, tamanho_barra_itens, console, efeitos
 from codigos.mapa.cenarios import gerar_cenarios
 from codigos.entidades.bosses import boss_group
 from codigos.interfaces.menu import level_up, mercado
 from codigos.outros.auxiliares import level as le, dados as da, \
-    boss_lbl as bl, health_bar as hb, info, update_grupos, update_to_draw, update_pos, grupo_menu
+    boss_lbl as bl, health_bar as hb, info, update_grupos, update_to_draw, update_pos, grupo_menu, dead
 from codigos.mapa.backgrounds import backgrounds
 from codigos.entidades.gerador import get_mercadores, get_npcs, get_inimigos
 from codigos.outros.armazenamento import ler, escrever
 from threading import Thread
+from codigos.command_line import CommandLine
 
 pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP])
 pygame.mixer.pre_init(44100, 16, 2, 4096)
@@ -25,10 +28,7 @@ cenarios = {}
 t = Thread(target=gerar_cenarios, args=[cenarios])
 t.start()
 
-if musica:
-    pygame.mixer.music.load('arquivos/sons/musicas/The_Old_Tower_Inn.mp3')
-    pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(0.3)
+gerenciador_musica = GerenciadorMusica()
 
 inimigos = pygame.sprite.Group()
 npcs = pygame.sprite.Group()
@@ -38,6 +38,8 @@ bosses = pygame.sprite.Group()
 sprites_update = pygame.sprite.Group()
 sprites_draw = pygame.sprite.Group()
 sprites_menu = pygame.sprite.Group()
+sprites_buffer = pygame.sprite.Group()
+spell_sprites = pygame.sprite.Group()
 
 personagem = Personagem((width + block_size[0], height // 2))
 personagem.rect.bottomleft = block_size[0], height // 2
@@ -73,6 +75,11 @@ tela = pygame.display.set_mode(size)
 pygame.display.set_caption('RPG Pygame')
 relogio = pygame.time.Clock()
 
+if console:
+    linha_comandos = CommandLine(cenarios, lista_sprites, sprites_buffer)
+    thread_comandos = Thread(target=linha_comandos.run)
+    thread_comandos.start()
+
 
 # Funcoes que desenham informacoes na tela
 
@@ -104,21 +111,24 @@ for b in bosses.sprites():
 # Exibição dos itens utilizaveis do personagem
 sprites_menu = grupo_menu(personagem, tamanho_barra_itens)
 
+t_musicas = Thread(target=gerenciador_musica.run, args=[cenario])
+t_musicas.start()
+sfx_t = Thread(target=gerenciador_musica.effect_thread, args=[])
+sfx_t.start()
+
 while 1:
     # Laço principal do jogo
     relogio.tick(fps)
     tela.blit(backgrounds[cenarios[cenario].background], (0, 0))
     t2 = Thread(target=chao_sprite.draw, args=[tela])
     t2.start()
+    sprites_menu = grupo_menu(personagem, tamanho_barra_itens)
     for event in pygame.event.get():
         # Recebe os eventos da tela
         if event.type == QUIT:
             escrever(personagem, inimigos, npcs, cenario)
             pygame.quit()
             exit()
-        if event.type == MOUSEBUTTONDOWN:
-            if event.button == 1:
-                personagem.attack()
         if event.type == KEYDOWN:
             # Clicou uma tecla
             if pygame.key.get_pressed()[K_w]:
@@ -147,6 +157,9 @@ while 1:
                 personagem.pular()
             if pygame.key.get_pressed()[K_p]:
                 level_up(personagem)
+            if pygame.key.get_pressed()[K_r]:
+                # Tenta reviver o personagem
+                revivido = personagem.reviver_custo()
             if pygame.key.get_pressed()[K_e]:
                 # Interage com Npc
                 for sprite in npcs.sprites():
@@ -154,7 +167,8 @@ while 1:
                         if pygame.sprite.collide_mask(personagem, sprite):
                             # Abre o menu de mercado deste mercador
                             mercado(personagem, sprite)
-                            sprites_menu = grupo_menu(personagem, tamanho_barra_itens)
+                            if efeitos:
+                                mercador_saudar.play()
                         break
         elif event.type == KEYUP:
             # Soltou a tecla
@@ -180,10 +194,14 @@ while 1:
                 personagem.idle()
         elif event.type == MOUSEBUTTONDOWN:
             x, y = event.pos
+            clicou = False
             for sprite in sprites_menu:
                 if sprite.rect.collidepoint(x, y):
-                    print('clicou')
                     sprite.usar(personagem)
+                    clicou = True
+            if not clicou:
+                if event.button == 1:
+                    personagem.attack()
 
     for x in pygame.sprite.spritecollide(personagem, sprites_draw, False):
         # Verifica se alguma entidade bloqueia movimento do personagem
@@ -212,7 +230,7 @@ while 1:
             if mudanca[0] == 0:
                 if (cenario[0] + mudanca[1], cenario[1]) in cenarios:
                     if cenarios[(cenario[0] + mudanca[1], cenario[1])].acesso or (cenario[0] + mudanca[1], cenario[1]) \
-                            in personagem.desbloqueio:
+                            in personagem.acesso:
                         target = 'centerx', width * (-1 * mudanca[1])
                         cenario = (cenario[0] + mudanca[1], cenario[1])
                         if mudanca[1] > 0:
@@ -222,7 +240,7 @@ while 1:
             elif mudanca[0] == 1:
                 if (cenario[0], cenario[1] + mudanca[1]) in cenarios:
                     if cenarios[(cenario[0], cenario[1] + mudanca[1])].acesso or (cenario[0], cenario[1] + mudanca[1]) \
-                            in personagem.desbloqueio:
+                            in personagem.acesso:
                         target = 'centery', height * (-1 * mudanca[1])
                         cenario = (cenario[0], cenario[1] + mudanca[1])
                         if mudanca[1] > 0:
@@ -236,18 +254,28 @@ while 1:
             # Atualização dos grupos update e draw
             t3 = Thread(target=update_grupos, args=[personagem, lista_sprites, sprites_update, sprites_draw, t4])
             t3.start()
+            # Chamada do gerenciador de musica
+            t_musicas.join()
+            t_musicas = Thread(target=gerenciador_musica.run, args=[cenario])
+            t_musicas.start()
 
     sprites_update.update()
     sprites_draw.draw(tela)
     sprites_menu.draw(tela)
+    spell_sprites.update()
+    spell_sprites.draw(tela)
     for sprite in sprites_draw.sprites():
-        if sprite.tipo not in ['balao', 'decorativo']:
+        if sprite.tipo not in ['balao', 'decorativo', 'pocao']:
             health_bar(sprite)
 
     t4 = Thread(target=update_to_draw, args=[personagem.rect, sprites_update, sprites_draw])
     t4.start()
 
-    # Processos dos inimigos
+    # Joga as sprites do buffer de comandos para as listas de uso
+    for x in sprites_buffer:
+        sprites_update.add(x)
+        sprites_buffer.remove(x)
+
     for inimigo in [x for x in sprites_update.sprites() if (x.tipo == 'monster' or x.tipo == 'boss')]:
         # Itera sobre os inimigos que estão no range de update
         if pygame.sprite.collide_mask(inimigo, personagem.sprite_ataque()) is not None:
@@ -262,11 +290,29 @@ while 1:
             inimigo.dir = 0, 0
             if inimigo.ataque:
                 # Movimento de ataque bem sucedido
-                personagem.vida -= inimigo.dano
+                if not pygame.mixer.Channel(0).get_busy():
+                    inimigo.play_sound('hit')
+
+                if inimigo.ataque_critico:
+                    personagem.vida -= inimigo.dano_critico
+                else:
+                    personagem.vida -= inimigo.dano
+
+                if personagem.vida <= 0:
+                    gerenciador_musica.play_death()
                 inimigo.ataque = False
             elif inimigo.ataque:
                 # Movimento de ataque errou
                 inimigo.ataque = False
+
+        inimigo.ataque = False
+
+        # Processos de geracao de spells
+        if inimigo.has_spell:
+            if inimigo.spelling:
+                if pygame.sprite.collide_rect_ratio(inimigo.spell_range)(inimigo, personagem):
+                    spell_sprites.add(inimigo.get_spell())
+                inimigo.spelling = False
 
         # Verifica se o personagem está no campo de visão do inimigo
         seguir = False
@@ -278,6 +324,8 @@ while 1:
         # Age a partir da verificação acima
         if seguir:
             # Seu dir representa a distancia que andará em cada direção
+            if not pygame.mixer.Channel(0).get_busy():
+                inimigo.play_sound('find')
             inimigo.dir = inimigo.rect.centerx - personagem.rect.centerx, inimigo.rect.centery - personagem.rect.centery
             inimigo.busy = True
         else:
@@ -285,10 +333,11 @@ while 1:
             inimigo.rand_walk()
 
         # Movimentação do inimigo
-        inimigo.mover(cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio)
+        inimigo.mover(cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio, sprites_update.sprites())
 
         # Morte do inimigo
         if inimigo.dead:
+            inimigo.play_sound('death')
             if inimigo.is_boss:
                 # Desbloqueia a saida do cenario que o boss referencia
                 personagem.desbloqueio.append(inimigo.lock)
@@ -296,11 +345,11 @@ while 1:
                     personagem.acesso.append(x)
             personagem.exp += inimigo.exp
             inimigo.kill()
-            drop = inimigo.drop()
-            lista_sprites.add(drop)
-            sprites_draw.add(drop)
-            sprites_update.add(drop)
-            drops.add(drop)
+            for drop in inimigo.drop():
+                lista_sprites.add(drop)
+                sprites_draw.add(drop)
+                sprites_update.add(drop)
+                drops.add(drop)
             personagem.upar()
 
     if personagem.ataque:
@@ -308,13 +357,16 @@ while 1:
         personagem.ataque = False
 
     for boss in bosses:
-        if boss.rect.x - personagem.rect.x <= width:
+        if abs(boss.rect.x - personagem.rect.x) <= width and abs(boss.rect.y - personagem.rect.y) <= height:
             # Caso o boss esteja proximo mostra sua barra de vida
             boss_lbl(boss)
 
     for x in pygame.sprite.spritecollide(personagem, drops, False):
         # Recolhe drops
-        personagem.coins += x.value
+        if type(x).__name__ == 'Coin':
+            personagem.coins += x.value
+        else:
+            personagem.add_item(x)
         x.kill()
 
     for npc in npcs.sprites():
@@ -323,6 +375,14 @@ while 1:
             # health_bar(npc)
             level(npc, (0, 0))
 
+    for spell in spell_sprites.sprites():
+        spell.rect = personagem.rect
+        if spell.end:
+            personagem.vida -= spell.dmg
+            spell.kill()
+
+    if personagem.is_dead():
+        dead(personagem, tela)
     level(personagem)
     dados(personagem)
     info(cenario, personagem, tela, relogio.get_fps())

@@ -3,7 +3,9 @@ from ..outros.auxiliares import img_load
 from ..variaveis import char_size, exigencia_niveis, efeitos, fps, screen_size
 from ..ambiente.sons import espadas, levelup
 from random import choice
+from codigos.entidades.gerenciador_imagens import imagens
 
+images = imagens['personagem']
 
 width, height = screen_size
 
@@ -24,46 +26,33 @@ class Personagem(pygame.sprite.Sprite):
             else:
                 self.mask = pygame.mask.from_surface(images[1])
 
-    def __init__(self, pos):
+    def __init__(self, pos=(0, 0)):
         width, height = pos
         self.height, self.width = width, height
-        dir = 'arquivos/imagens/Knight/'
         pygame.sprite.Sprite.__init__(self)
 
         # Variáveis gerais
         self.niveis = [0, 15]
         for i in range(2, 50):
-            self.niveis.append(self.niveis[i-1]*exigencia_niveis)
+            self.niveis.append(int(self.niveis[i-1]+(exigencia_niveis*self.niveis[i-1])))
+
+        self.revividas = 0
         self.nivel = 1
         self.inventario = []
         self.tipo = 'personagem'
-        self.vel = 7 * (30/fps)
+        self.vel, self.vel_max = 7 * (30/fps), 15
         self.acesso = []
         self.desbloqueio = []
         self.pulo_altura = 50
         self.diag_nerf = 1.5
         self.vida_max, self.vida = 10, 10
         self.dano = 5
-        self.animar_freq = 0.3 * (30/fps)
-        self.coins, self.pontos, self.sorte, self.exp = 100, 0, 0, 0
+        self.animar_freq = self.animar_freq_backup = 0.30 * (30/fps)
+        self.coins, self.pontos, self.sorte, self.exp = 0, 0, 0, 0
+        self.buffs = {}
 
         # Armazenamento das imagens do personagem
-        self.images = {'idle': [], 'run': [], 'attack': [], 'jump': [],
-                       'jump_fall': []}
-        idle = pygame.image.load(dir+'_Idle.png').convert_alpha()
-        run = pygame.image.load(dir+'_Run.png').convert_alpha()
-        attack = pygame.image.load(dir+'_Attack.png').convert_alpha()
-        jump = pygame.image.load(dir+'_Jump.png').convert_alpha()
-        jump_fall = pygame.image.load(dir+'_JumpFallInbetween.png').convert_alpha()
-        death = pygame.image.load(dir+'_Death.png').convert_alpha()
-        foot = pygame.image.load(dir+'-foot.png').convert_alpha()
-        self.images['idle'] = img_load(idle, (120, 80), char_size)
-        self.images['run'] = img_load(run, (120, 80), char_size)
-        self.images['attack'] = img_load(attack, (120, 80), char_size)
-        self.images['jump'] = img_load(jump, (120, 80), char_size)
-        self.images['jump_fall'] = img_load(jump_fall, (120, 80), char_size)
-        self.images['death'] = img_load(death, (120, 80), char_size)
-        self.images['foot'] = img_load(foot, (120, 80), char_size)
+        self.images = images
 
         # Varíaveis de funcionamento
         self.index = 0
@@ -120,6 +109,7 @@ class Personagem(pygame.sprite.Sprite):
         if self.vida <= 0:
             self.animar = False
             self.sector = 'death'
+        self.verificar_buffs()
         # Parte responsável pela animação do personagem
         self.index += self.animar_freq
         if self.index >= len(self.images[self.sector]):
@@ -135,9 +125,7 @@ class Personagem(pygame.sprite.Sprite):
             if self.sector == 'jump' and not self.pulo:
                 self.sector = 'idle'
             if self.sector == 'death':
-                self.animar = False
-                self.animar_freq, self.vel, self.dano = 0, 0, 0
-                self.index = len(self.images['death'])-1
+                self.morte()
         if self.pulo:
             if not self.descida:
                 self.pulo_atual += self.vel
@@ -160,7 +148,7 @@ class Personagem(pygame.sprite.Sprite):
         """Função para movimentação do personagem, recebe o vetor dir
         a função de verificação do chão e a função de verificação de bloqueio,
         retorna qual, se houver, mudança deve ser feito nos cenarios"""
-        if self.animar:
+        if self.animar and self.vida > 0:
             if dir[0] == 0:
                 mod = ['centerx']
             elif dir[0] == 1:
@@ -201,10 +189,24 @@ class Personagem(pygame.sprite.Sprite):
 
     def aumentar_vida(self, qtd):
         """Aumenta a vida do personagem em qtd pontos"""
-        if self.vida < self.vida_max:
+        if self.vida_max > self.vida > 0:
             self.vida = min(self.vida+qtd, self.vida_max)
             return True
         return False
+
+    def aumentar_vel(self, qtd, tempo):
+        """Aumenta temporariamente a velocidade do personagem"""
+        if self.vel < self.vel_max and self.vida > 0:
+            self.vel = min(self.vel_max, self.vel + qtd)
+            self.buffs['vel'] = {'valor': qtd, 'tempo_restante': tempo}
+            return True
+        return False
+
+    def aumentar_dano(self, qtd, tempo):
+        """Aumenta temporariamente o dano do personagem"""
+        self.dano += qtd
+        self.buffs['dano'] = {'valor': qtd, 'tempo_restante': tempo}
+        return True
 
     def add_item(self, obj):
         """Adciona um item ao inventario"""
@@ -216,3 +218,45 @@ class Personagem(pygame.sprite.Sprite):
         self.inventario.append(obj)
         obj.create_sprite(obj.img)
         return True
+
+    def verificar_buffs(self):
+        """Verifica o vetor de buffs temporarios, removendo efeitos expirados"""
+        for effect in list(self.buffs):
+            if self.buffs[effect]['tempo_restante'] <= 0:
+                setattr(self, effect, getattr(self, effect)-self.buffs[effect]['valor'])
+                del self.buffs[effect]
+                print('efeito expirado')
+            else:
+                self.buffs[effect]['tempo_restante'] = self.buffs[effect]['tempo_restante'] - (1/fps)
+
+    def morte(self):
+        """Funcao chamada quando o personagem for morto"""
+        self.animar = False
+        self.sector = 'death'
+        self.animar_freq = 0
+        self.index = len(self.images['death']) - 1
+
+    def reviver(self):
+        """Funcao chamada para reviver o personagem"""
+        self.animar, self.sector, self.animar_freq, self.index = True, 'idle', self.animar_freq_backup, 0
+        self.vida = self.vida_max
+
+    def get_custoreviver(self):
+        """Retorna quantos coins custará para reviver"""
+        return 50 * (2 * (1+self.revividas))
+
+    def reviver_custo(self):
+        """Revive o personagem com custo de coins"""
+        c = self.get_custoreviver()
+        if self.coins >= c:
+            self.coins -= c
+            self.revividas += 1
+            self.reviver()
+            return True
+        return False
+
+    def is_dead(self):
+        """Retorna se o personagem está morto"""
+        if self.sector == 'death':
+            return True
+        return False

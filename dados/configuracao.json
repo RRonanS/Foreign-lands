@@ -1,0 +1,10 @@
+{
+  "versao": 0.2,
+  "linguagem": "portugues",
+  "save_carregado": null,
+  "sons": {
+    "ativo": true,
+    "volume": 1
+  },
+  "console": true
+}

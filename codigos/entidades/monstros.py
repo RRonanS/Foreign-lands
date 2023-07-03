@@ -1,12 +1,16 @@
 # Este arquivo possui os construtores para todos monstros usados no jogo e funções
 # para gerar monstros pelo mapa
 import pygame.sprite
-from ..outros.auxiliares import img_load
-from ..variaveis import char_size, screen_size, exp_mult, fps
+from ..variaveis import screen_size, exp_mult, fps, efeitos
 from random import randint, random
 from ..mapa.decorativo import Coin
+from codigos.entidades.gerenciador_imagens import imagens
+import codigos.itens.itens as itens
+from codigos.ambiente.sons import monstros_sounds
 
 width, height = screen_size
+imagens = imagens['monstros']
+sounds = monstros_sounds
 
 
 class Monstro(pygame.sprite.Sprite):
@@ -23,7 +27,11 @@ class Monstro(pygame.sprite.Sprite):
         self.diretorio = 'arquivos/imagens/monstros/'
         self.images = {}
         self.is_boss = False
-        self.anim_mult = 0.2 * (30 / fps)
+        self.has_spell = False
+        self.ataque_critico = False
+        self.anim_mult = 0.3 * (30 / fps)
+        self.droprate = {'Pocao_vida': 0.01}
+        self.sounds = {}
 
     def drop(self):
         """Gera os drops referentes a tal inimigo"""
@@ -32,7 +40,22 @@ class Monstro(pygame.sprite.Sprite):
         moeda.value = val
         x, y = self.rect.centerx, self.rect.centery
         moeda.rect.centerx, moeda.rect.centery = x, y
-        return moeda
+        drops = [moeda]
+        for key in self.droprate:
+            # Drop de itens
+            if self.droprate[key] > random():
+                classe = getattr(itens, key)
+                obj = classe()
+                obj.as_drop()
+                obj.rect.centerx, obj.rect.centery = x, y
+                drops.append(obj)
+        return drops
+
+    def play_sound(self, sound):
+        """Toca algum som relacionado ao inimigo"""
+        if sound in self.sounds and efeitos:
+            self.sounds[sound].play()
+        return
 
 
 class Esqueleto(Monstro):
@@ -43,6 +66,8 @@ class Esqueleto(Monstro):
 
         def __init__(self, img, pos, flip, index=6):
             pygame.sprite.Sprite.__init__(self)
+            if index >= len(img):
+                index = len(img) - 1
             self.image = img[index]
             self.rect = self.image.get_rect()
             self.rect = pos
@@ -55,25 +80,21 @@ class Esqueleto(Monstro):
 
     def __init__(self):
         Monstro.__init__(self)
+        self.droprate = {'Pocao_vida': 0.02}
 
         # variáveis da entidade
         self.vida, self.vida_max = 10, 10
-        self.dano, self.peso = 2, 2
+        self.dano, self.peso = 3, 2
         self.random_walk_mult = 0.02
         self.exp = 15 * exp_mult
+        self.anim_mult = 0.37 * (30 / fps)
 
-        sprite_size = 150, 150
         self.sector, self.index = 'idle', 0
-        self.diretorio += 'Skeleton/'
+
         # Chamada e armazenamento das imagens do monstro
-        idle = pygame.image.load(self.diretorio + 'Idle.png').convert_alpha()
-        attack = pygame.image.load(self.diretorio + 'Attack.png').convert_alpha()
-        walk = pygame.image.load(self.diretorio + 'Walk.png').convert_alpha()
-        dead = pygame.image.load(self.diretorio + 'Death.png').convert_alpha()
-        self.images['idle'] = img_load(idle, sprite_size, char_size, True)
-        self.images['attack'] = img_load(attack, sprite_size, char_size, True)
-        self.images['walk'] = img_load(walk, sprite_size, char_size, True)
-        self.images['death'] = img_load(dead, sprite_size, char_size, True)
+        self.images = imagens['esqueleto']
+
+        self.sounds = sounds['esqueleto']
 
         # Varíaveis de funcionamento
         self.image = self.images[self.sector][self.index]
@@ -124,13 +145,13 @@ class Esqueleto(Monstro):
         self.index += self.anim_mult
         if self.index >= len(self.images[self.sector]):
             self.index = 0
-            if self.sector == 'attack':
+            if self.sector == 'attack' or self.sector == 'cast':
                 self.sector = 'idle'
                 self.animar = True
                 self.ataque = True
             elif self.sector == 'walk' and self.dir[0] == -1:
                 self.sector = 'idle'
-            if self.sector == 'death':
+            elif self.sector == 'death':
                 self.vel = 0
                 self.dead = True
 
@@ -141,9 +162,9 @@ class Esqueleto(Monstro):
             img = self.images[self.sector][int(self.index)]
         self.image = img
 
-    def mover(self, ver_func, ver_func2):
-        """Dado o vetor de dir do objeto e as verificacoes de validade do chao, avança para uma nova posição válida,
-        se essa existir """
+    def mover(self, ver_func, ver_func2, entidades):
+        """Dado o vetor de dir do objeto, as verificacoes de validade do chao e as entidades do jogo,
+         avança para uma nova posição válida,se essa existir """
         if self.animar:
             self.sector = 'walk'
             if self.dir[0] != 0:
@@ -182,23 +203,20 @@ class Olho(Esqueleto):
 
     def __init__(self):
         Esqueleto.__init__(self)
+        self.droprate = {'Pocao_vida': 0.03, 'Pocao_vidaGrande': 0.01}
+        self.coin_drop = (1, 2)
 
         self.vida_max, self.vida = 15, 15
-        self.dano, self.vel, self.peso = 3, 3 * (30 / fps), 3
+        self.dano, self.vel, self.peso = 5, 3 * (30 / fps), 3
         self.visao = 0.5
-        self.exp = 20 * exp_mult
+        self.exp = 25 * exp_mult
         self.voa = True
+        self.anim_mult = 0.25 * (30 / fps)
 
-        sprite_size = 150, 150
-        self.diretorio = self.diretorio.replace('Skeleton/', 'Flying eye/')
+        self.sounds = sounds['olho']
 
-        attack = pygame.image.load(self.diretorio + 'Attack.png').convert_alpha()
-        flight = pygame.image.load(self.diretorio + 'Flight.png').convert_alpha()
-        dead = pygame.image.load(self.diretorio + 'Death.png').convert_alpha()
-        self.images = {'idle': img_load(flight, sprite_size, char_size, True),
-                       'attack': img_load(attack, sprite_size, char_size, True),
-                       'walk': img_load(flight, sprite_size, char_size, True),
-                       'death': img_load(dead, sprite_size, char_size, True)}
+        self.images = imagens['olho']
+
         self.image = self.images[self.sector][self.index]
 
 
@@ -208,24 +226,19 @@ class Goblin(Esqueleto):
 
     def __init__(self):
         Esqueleto.__init__(self)
+        self.droprate = {'Pocao_vida': 0.05, 'Pocao_vidaGrande': 0.02}
+        self.coin_drop = (2, 3)
 
-        self.vida_max, self.vida = 20, 20
-        self.dano, self.peso, self.vel = 5, 5 * (30 / fps), 1
+        self.vida_max, self.vida = 30, 30
+        self.dano, self.peso, self.vel = 8, 5 * (30 / fps), 2 * (30 / fps)
         self.visao = 0.25
-        self.exp = 35 * exp_mult
-        size = char_size[0] * 1.5, char_size[1] * 1.5
+        self.exp = 50 * exp_mult
+        self.anim_mult = 0.32 * (30 / fps)
 
-        sprite_size = 150, 150
-        self.diretorio = self.diretorio.replace('Skeleton/', 'Goblin/')
+        self.sounds = sounds['goblin']
 
-        attack = pygame.image.load(self.diretorio + 'Attack.png').convert_alpha()
-        idle = pygame.image.load(self.diretorio + 'Idle.png').convert_alpha()
-        run = pygame.image.load(self.diretorio + 'Run.png').convert_alpha()
-        dead = pygame.image.load(self.diretorio + 'Death.png').convert_alpha()
-        self.images = {'idle': img_load(idle, sprite_size, size, True),
-                       'attack': img_load(attack, sprite_size, size, True),
-                       'walk': img_load(run, sprite_size, size, True),
-                       'death': img_load(dead, sprite_size, size, True)}
+        self.images = imagens['goblin']
+
         self.image = self.images[self.sector][self.index]
         self.mask = pygame.mask.from_surface(self.images['attack']
                                              [len(self.images['attack']) - 1])
@@ -238,24 +251,19 @@ class Cogumelo(Esqueleto):
 
     def __init__(self):
         Esqueleto.__init__(self)
+        self.droprate = {'Pocao_vida': 0.08, 'Pocao_vidaGrande': 0.04, 'Pocao_dano': 0.02}
+        self.coin_drop = (3, 5)
 
-        self.vida_max, self.vida = 25, 25
-        self.dano, self.vel, self.peso = 7, 2 * (30 / fps), 8
+        self.vida_max, self.vida = 40,  40
+        self.dano, self.vel, self.peso = 9, 2 * (30 / fps), 8
         self.visao = 0.20
-        self.exp = 50 * exp_mult
+        self.exp = 200 * exp_mult
+        self.anim_mult = 0.4 * (30 / fps)
 
-        sprite_size = 150, 150
-        size = char_size[0] * 1.5, char_size[1] * 1.5
-        self.diretorio = self.diretorio.replace('Skeleton/', 'Mushroom/')
+        self.sounds = sounds['cogumelo']
 
-        attack = pygame.image.load(self.diretorio + 'Attack.png').convert_alpha()
-        idle = pygame.image.load(self.diretorio + 'Idle.png').convert_alpha()
-        run = pygame.image.load(self.diretorio + 'Run.png').convert_alpha()
-        dead = pygame.image.load(self.diretorio + 'Death.png').convert_alpha()
-        self.images = {'idle': img_load(idle, sprite_size, size, True),
-                       'attack': img_load(attack, sprite_size, size, True),
-                       'walk': img_load(run, sprite_size, size, True),
-                       'death': img_load(dead, sprite_size, size, True)}
+        self.images = imagens['cogumelo']
+
         self.image = self.images[self.sector][self.index]
         self.mask = pygame.mask.from_surface(self.images['attack']
                                              [len(self.images['attack']) - 1])
@@ -265,7 +273,94 @@ class Cogumelo(Esqueleto):
         return self.sprite_espada(self.images['attack'], self.rect, self.flip, 7)
 
 
-class Spawner:
-    def __init__(self):
-        pass
+class BringerDeath(Esqueleto):
+    """Monstro bringer of death"""
+    class SpellSprite(pygame.sprite.Sprite):
+        """Sprite do seu spell"""
+        def __init__(self, images, dmg):
+            pygame.sprite.Sprite.__init__(self)
+            self.imgs = images
+            self.end = False
+            self.dmg = dmg
+            self.sector = 0
+            self.vel = 0.15 * (30 / fps)
+            self.image = images[self.sector]
+            self.rect = self.image.get_rect()
+            self.anim_mult = 0.3 * (30 / fps)
 
+        def update(self):
+            self.sector += self.vel
+            if self.sector >= len(self.imgs):
+                # Fim da sprite, sinaliza na variavel end para causar o dano
+                self.end = True
+                self.sector = 0
+            else:
+                self.image = self.imgs[int(self.sector)]
+
+    def __init__(self):
+        Esqueleto.__init__(self)
+        self.droprate = {'Pocao_vida': 0.20, 'Pocao_vidaGrande': 0.10,
+                         'Pocao_velocidade': 0.05, 'Pocao_dano': 0.02}
+        self.coin_drop = (5, 10)
+        self.has_spell = True
+        self.spelling = False
+
+        self.vida_max, self.vida = 100, 100
+        self.dano, self.vel, self.peso = 7, 2.5 * (30 / fps), 10
+        self.visao = 0.25
+        self.exp = 300 * exp_mult
+        self.spell_cooldown, self.spell_total = 0,  15 * fps
+        self.spell_range = 2  # Range quadrado em * tamanho do monstro
+        self.spell_dmg = 5
+
+        self.sounds = sounds['bringerdeath']
+
+        self.images = imagens['bringerdeath']
+
+        self.image = self.images[self.sector][self.index]
+        self.mask = pygame.mask.from_surface(self.images['attack']
+                                             [len(self.images['attack']) - 1])
+
+    def spell(self):
+        """Funcao para lancar o spell"""
+        self.spell_cooldown = self.spell_total
+        self.spelling = True
+
+    def atacar(self):
+        """Caso possível, executa um ataque ou lança spell"""
+        if self.sector != 'attack' and self.animar:
+            if self.spell_cooldown == 0:
+                self.sector = 'cast'
+            else:
+                self.sector = 'attack'
+            self.animar = False
+
+    def update_especifico(self):
+        """Updates especificos do monstro"""
+        if self.sector == 'cast' and self.index + self.anim_mult >= len(self.images[self.sector]):
+            self.spell()
+        self.spell_cooldown = max(0, self.spell_cooldown-1)
+
+    def get_spell(self):
+        """Retorna uma sprite responsavel pelo spell"""
+        return self.SpellSprite(self.images['spell'], self.spell_dmg)
+
+
+class Executor(Esqueleto):
+    """Monstro executor, invocado pelo boss executioner"""
+    def __init__(self):
+        Esqueleto.__init__(self)
+
+        self.droprate = {'Pocao_vida': 0.10}
+        self.coin_drop = (1, 5)
+
+        self.vida_max, self.vida = 10, 10
+        self.dano, self.vel, self.peso = 2, 3 * (30 / fps), 1
+        self.visao = 0.7
+        self.exp = 50 * exp_mult
+        self.voa = True
+        self.anim_mult = 0.25 * (30 / fps)
+
+        self.images = imagens['executor']
+
+        self.image = self.images[self.sector][self.index]

@@ -10,7 +10,9 @@ dir = 'arquivos/imagens/blocos/'
 # Conversão de id de bloco para nome da png
 id_png = {1: 'terra1', 2: 'terra2', 3: 'terra3', 4: 'terra4', 5: 'terra5',
           6: 'volcano1', 7: 'terra', 8: 'grama', 9: 'grama-passagem',
-          10: 'grama-intersec'}
+          10: 'grama-intersec', 11: 'cogumelo1', 12: 'cogumelo2', 13: 'cogumelo3',
+          14: 'brick/brick1', 15: 'brick/brick2', 16: 'brick/brick3', 17: 'brick/brick4',
+          18: 'brick/brick5', 19: 'brick/brick6'}
 imgs = {
     key: pygame.transform.scale(pygame.image.load(dir+f'{id_png[key]}.png'), block_size)
     for key in id_png
@@ -23,7 +25,10 @@ class Bloco(pygame.sprite.Sprite):
         """Cria um bloco dada sua posição topleft e o id do bloco"""
         pygame.sprite.Sprite.__init__(self)
         self.block_id = id
-        img = imgs[id]
+        try:
+            img = imgs[id]
+        except:
+            raise ValueError('ID de bloco inválido <'+str(id)+'>')
         self.image = img
         # Define se entidades podem andar sobre esse bloco
         self.walkable = True

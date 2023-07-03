@@ -8,7 +8,7 @@ pygame.display.set_mode(screen_size)
 
 
 def img_load(sheet, size, resize=(32, 32), flip=False):
-    '''Leitura linear de uma sprite sheet, retorna uma lista de imagens'''
+    """Leitura linear de uma sprite sheet, retorna uma lista de imagens"""
     imagens = []
     for i in range(32):
         try:
@@ -72,6 +72,16 @@ def info(num, personagem, tela, fps):
         tela.blit(val3, (0, val.get_height()*2))
 
 
+def dead(personagem, tela):
+    """Mostra a mensagem de morte na tela"""
+    texto1 = fonte2.render(f'Você está caído', True, vermelho)
+    texto2 = fonte2.render(f'Pressione R para reviver', True, vermelho)
+    texto3 = fonte1.render(f'Custa {personagem.get_custoreviver()} coins, esc para sair', True, preto)
+    tela.blit(texto1, ((width//2)-texto1.get_width()//2, (height//2)-texto1.get_height()//2))
+    tela.blit(texto2, ((width//2)-texto2.get_width()//2, (height//2)+texto1.get_height()//2))
+    tela.blit(texto3, ((width//2)-texto3.get_width()//2, (height//2) + texto1.get_height()*1.5))
+
+
 def update_grupos(pers, todas, updt, draw, t_wait=None):
     """Calcula quais entidaddes receberam update e/ou draw,
     aguarda a thread t_wait finalizar para iniciar"""
@@ -91,7 +101,6 @@ def update_grupos(pers, todas, updt, draw, t_wait=None):
 
     updt.add(pers)
     draw.add(pers)
-    print(updt, draw)
     return updt, draw
 
 
@@ -122,7 +131,7 @@ def update_pos(target, inimigos, drops, npcs):
 def grupo_menu(personagem, tam):
     grupo = pygame.sprite.Group()
     r = (1-tam)/2
-    acresc = 64
+    acresc = 32
     mn, mx = width*r, width*(r+tam)
     i = mn
     for x in personagem.inventario:

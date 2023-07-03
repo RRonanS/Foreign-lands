@@ -3,6 +3,7 @@ from codigos.variaveis import load
 import codigos.entidades.monstros as monstros
 import codigos.entidades.bosses as bmod
 import codigos.entidades.npcs as npcmod
+import codigos.itens.itens as itensmod
 
 dir = 'dados/'
 
@@ -20,7 +21,11 @@ def escrever(personagem, inimigos, npcs, cenario):
             "pos": [personagem.rect.bottomleft[0], personagem.rect.bottomleft[1]],
             "cenario": [cenario[0], cenario[1]],
             "acesso": [x for x in personagem.acesso],
-            "desbloqueio": [[x[0], x[1]] for x in personagem.desbloqueio]
+            "desbloqueio": [[x[0], x[1]] for x in personagem.desbloqueio],
+            "revividas": personagem.revividas,
+            "itens": {
+                type(i).__name__: {'qtd': i.quantidade} for i in personagem.inventario
+            }
         },
         "inimigos": {},
         "npcs": {}
@@ -38,7 +43,10 @@ def escrever(personagem, inimigos, npcs, cenario):
         cont += 1
         data['npcs'][str(cont)] = {
             "pos": [x.rect.bottomleft[0], x.rect.bottomleft[1]],
-            "tipo": type(x).__name__
+            "tipo": type(x).__name__,
+            "itens": {
+                type(m).__name__: {'qtd': m.quantidade} for m in x.mercadorias
+            }
         }
 
     with open(f'{dir}player_data.json', 'w') as json_file:
@@ -64,7 +72,14 @@ def ler(personagem, inimigos, npcs, bosses):
         personagem.acesso = [(i[0], i[1]) for i in p['acesso']]
         personagem.desbloqueio = [(i[0], i[1]) for i in p['desbloqueio']]
         personagem.rect.bottomleft = p['pos'][0], p['pos'][1]
+        personagem.revividas = p['revividas']
         cenario = p['cenario'][0], p['cenario'][1]
+        inventario = []
+        for key in p['itens']:
+            item = getattr(itensmod, key)()
+            item.quantidade = p['itens'][key]['qtd']
+            inventario.append(item)
+        personagem.inventario = inventario
         personagem.upar()
 
         i = d['inimigos']
@@ -84,6 +99,10 @@ def ler(personagem, inimigos, npcs, bosses):
         for key in n:
             class_ = getattr(npcmod, n[key]['tipo'])
             item = class_((n[key]['pos'][0], n[key]['pos'][1]))
+            mercadorias = []
+            for merc in n[key]['itens']:
+                mercadorias.append(getattr(itensmod, merc)())
+            item.mercadorias = mercadorias
             npcs.add(item)
 
         return True, cenario

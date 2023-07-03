@@ -1,14 +1,19 @@
 from math import sqrt
 from random import randint, choice
 import pygame.sprite
-from codigos.ambiente.textuais import fonte1, preto, branco
+
+from codigos.entidades.balao import Balao
 from codigos.variaveis import screen_size, fps
 from codigos.outros.auxiliares import img_load
+from codigos.outros.tradutor import Tradutor
 
 width, height = screen_size
-text_size = 20, 20
-cara = 40  # Max caracteres por linha(so funciona com auto)
-m_item = 3  # Max colunas por fala(so funciona com auto)
+tradutor = Tradutor()
+
+
+def trad(x):
+    return tradutor.traduzir(x)
+
 
 imagens = {
     'Mago': {
@@ -21,83 +26,9 @@ imagens = {
     },
     'Mercador':{
         'idle':
-            None
-            #img_load(pygame.image.load('arquivos/imagens/mercador/mercador.png').convert_alpha(), (48, 48), (48, 48))
+            img_load(pygame.image.load('arquivos/imagens/mercador/mercador.png').convert_alpha(), (48, 48), (48, 48))
     }
 }
-
-
-class Balao(pygame.sprite.Sprite):
-    """Classe para representar um balão de fala"""
-
-    def __init__(self, pos, texto, auto=False):
-        r"""Recebe a posição do balão, o texto a ser mostrado e se deve
-        automaticamente quebrar o texto. Formatos textuais:
-        / indica quebra de frase e \ quebra de linha"""
-        pygame.sprite.Sprite.__init__(self)
-        self.textos = []
-        self.tipo = 'balao'
-
-        # Quebra do texto em partes
-        if auto:
-            item = []
-            for i in range(0, len(texto), cara):
-                item.append(texto[i:min(i + cara, len(texto) - 1) + 1])
-                if len(item) >= m_item:
-                    self.textos.append(item)
-                    item = []
-        else:
-            i, j = 0, 0
-            item = []
-            for j in range(len(texto)):
-                if texto[j] == '/':
-                    item.append(texto[i:j])
-                    self.textos.append(item)
-                    item = []
-                    i = j + 1
-                if texto[j] in r'\'':
-                    item.append(texto[i:j])
-                    i = j + 1
-            try:
-                self.textos.append([texto[i:j + 1]])
-            except:
-                pass
-
-        self.anim_val = 0.015 * (30 / fps)
-        self.pos = pos
-        self.font = fonte1
-        self.i, self.timer, self.t_i, self.w, self.h = 0, 0, 0, 0, 0
-        self.surfaces = []
-        for x in self.textos[self.t_i]:
-            textSurf = self.font.render(x, 1, preto, branco)
-            self.w = max(self.w, textSurf.get_width())
-            self.h += textSurf.get_height()
-            self.surfaces.append(textSurf)
-        self.image = pygame.Surface((self.w, self.h))
-        self.rect = self.image.get_rect()
-        self.rect.bottomleft = pos
-
-    def update(self):
-        """Exibição do texto por tempo determinado"""
-        self.timer += self.anim_val
-        self.image.fill(branco)
-        if self.timer >= 1:
-            self.timer = 0
-            self.t_i += 1
-            if self.t_i >= len(self.textos):
-                self.kill()
-            else:
-                self.surfaces, self.w, self.h = [], 0, 0
-                for x in self.textos[self.t_i]:
-                    textSurf = self.font.render(x, 1, preto, branco)
-                    self.w = max(self.w, textSurf.get_width())
-                    self.h += textSurf.get_height()
-                    self.surfaces.append(textSurf)
-                self.image = pygame.Surface((self.w, self.h))
-                self.rect = self.image.get_rect()
-                self.rect.bottomleft = self.pos
-        for i in range(len(self.surfaces)):
-            self.image.blit(self.surfaces[i], [0, i * (self.h // len(self.surfaces))])
 
 
 class Npc(pygame.sprite.Sprite):
@@ -174,7 +105,7 @@ class Mago(Npc):
 class Villager(Npc):
     """Classe para representar um npc villager"""
 
-    def __init__(self, pos):
+    def __init__(self):
         Npc.__init__(self)
         # Pode se movimentar na distancia range em relacao a base
         self.range = 0, 0
@@ -189,7 +120,6 @@ class Villager(Npc):
         self.index, self.sector = 0, ''
         # Carregar as imagens
         self.rect = self.image.get_rect()
-        self.rect.center = pos
 
     def update(self):
         atividade = randint(1, 10)
@@ -203,7 +133,6 @@ class Villager(Npc):
             if self.esperando <= 0:
                 self.esperando = 0
         self.mover()
-        # Anime e faça se mover
 
     def andar(self):
         """Faz ele andar aleatoriamente"""
@@ -244,7 +173,7 @@ class Mercador(Npc):
         pass
 
     def falar(self):
-        texto = 'E'
+        texto = trad('ola viajante /<E> para interagir')
         self.fala = Balao((self.rect.x, self.rect.topleft[1] + 10), texto)
         for grupo in self.groups()[1:]:
             grupo.add(self.fala)
@@ -254,20 +183,8 @@ class Mercador(Npc):
         """Trigger de proximidade"""
         if abs(sqrt((self.rect.x - entidade.rect.x) ** 2 + (self.rect.y - entidade.rect.y) ** 2)) <= self.visao:
             if not self.falando:
-                # self.falar()
+                self.falar()
                 pass
             elif self.falando and len(self.fala.groups()) == 0:
-                # self.falar()
+                self.falar()
                 pass
-
-
-"""
-Mercador:
-    Npc estático(ou móvel) que quando o player estiver proximo dele emite 
-    uma mensagem indicando uma tecla X a ser pressionada. Quando o jogador 
-    pressionar X, abre uma tela com os itens que o mercador vende
-    Itens:
-        Objetos que podem ser adquiridos pelo jogador em troca de moedas
-        Quais itens adiciono?
-    
-"""

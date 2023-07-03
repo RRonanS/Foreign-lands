@@ -13,12 +13,15 @@ def gerar_cenarios(cenarios):
     for key in data:
         a = key.split()
         tupla = int(a[0]), int(a[1])
-        if not data[key]['copia']['valor']:
-            chao = Chao(data[key])
-        else:
-            data[key]['blocos'] = data[data[key]['copia']['fonte']]['blocos']
-            chao = Chao(data[key])
-        cenarios[tupla] = chao
-        chao.acesso = data[key]['acesso']
-        chao.lock = data[key]['lock']
-        chao.background = data[key]['background']
+        try:
+            if not data[key]['copia']['valor']:
+                chao = Chao(data[key])
+            else:
+                data[key]['blocos'] = data[data[key]['copia']['fonte']]['blocos']
+                chao = Chao(data[key])
+            cenarios[tupla] = chao
+            chao.acesso = data[key]['acesso']
+            chao.lock = data[key]['lock']
+            chao.background = data[key]['background']
+        except Exception as e:
+            print('[Erro] na criação do cenário', tupla[0], str(tupla[1]) + ':', e)
