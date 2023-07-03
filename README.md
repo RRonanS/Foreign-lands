@@ -33,3 +33,28 @@ https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sha
   - Personalização básica do cenário do jogo(Json)
 
   - Início da criacão do sistema de Npcs
+
+# Release 0.2 (03/07/2023)
+
+    - Sistema de linha de comando do jogo
+    
+    - Inimigos tem chance de dropar poções
+    
+    - Novos monstros: Bringer Of Death, Executor
+    
+    - Novo boss: Executioner
+    
+    - Novo cenário
+    
+    - Otimização do carregamento de imagens ao inicio(2-4s -> 0.3-0.7s)
+    
+    - Trilha e efeitos sonoros novos adicionados
+    
+    - Novas poções:
+        - Vida Grande
+        - Velocidade
+        - Dano
+    
+    - reviver personagem usando coins
+    
+    - Disponibilização do primeiro executável
