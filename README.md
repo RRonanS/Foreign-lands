@@ -58,3 +58,18 @@ https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sha
     - reviver personagem usando coins
     
     - Disponibilização do primeiro executável
+
+# Release 0.2.1 (23/10/2023)
+
+    - Novo Main-Menu
+    
+    - Menu de configurações
+    
+    - Integração do sistema de idiomas
+    
+    - Feedback ao subir de nível
+    
+    - Fim de jogo ao morrer e não ter coins
+    
+    - Correção de bugs
+    
