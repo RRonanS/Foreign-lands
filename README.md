@@ -8,31 +8,31 @@ https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sha
 
 # Release 0.1 (23/02/2023)
 
-  - Sistemas base de:
+    - Sistemas base de:
+      
+      - Movimentação do jogador e dos inimigos
+      
+      - Ataque do jogador e dos inimigos
+      
+      - Uso de poções
+      
+      - Mercado com coins via npcs mercadores
+      
+      - Evolução do jogador
+      
+      - Cenários do mapa
+      
+      - Ambientação do jogo
+      
+    - Primeiro Boss
     
-    - Movimentação do jogador e dos inimigos
+    - Avanço pelo mapa de jogo 
     
-    - Ataque do jogador e dos inimigos
+    - Salvamento do jogo(Json)
     
-    - Uso de poções
-    
-    - Mercado com coins via npcs mercadores
-    
-    - Evolução do jogador
-    
-    - Cenários do mapa
-    
-    - Ambientação do jogo
-    
-  - Primeiro Boss
+    - Personalização básica do cenário do jogo(Json)
   
-  - Avanço pelo mapa de jogo 
-  
-  - Salvamento do jogo(Json)
-  
-  - Personalização básica do cenário do jogo(Json)
-
-  - Início da criacão do sistema de Npcs
+    - Início da criacão do sistema de Npcs
 
 # Release 0.2 (03/07/2023)
 
