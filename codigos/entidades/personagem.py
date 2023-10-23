@@ -1,6 +1,5 @@
 import pygame.sprite
-from ..outros.auxiliares import img_load
-from ..variaveis import char_size, exigencia_niveis, efeitos, fps, screen_size
+from ..variaveis import exigencia_niveis, fps, screen_size
 from ..ambiente.sons import espadas, levelup
 from random import choice
 from codigos.entidades.gerenciador_imagens import imagens
@@ -27,6 +26,7 @@ class Personagem(pygame.sprite.Sprite):
                 self.mask = pygame.mask.from_surface(images[1])
 
     def __init__(self, pos=(0, 0)):
+        from codigos.variaveis import fps
         width, height = pos
         self.height, self.width = width, height
         pygame.sprite.Sprite.__init__(self)
@@ -79,6 +79,7 @@ class Personagem(pygame.sprite.Sprite):
 
     def attack(self):
         """Se possível, faz o personagem atacar"""
+        from codigos.variaveis import efeitos
         if self.sector != 'attack' and self.animar:
             if efeitos:
                 choice(espadas).play()
@@ -92,7 +93,8 @@ class Personagem(pygame.sprite.Sprite):
             self.sector = 'jump'
 
     def upar(self):
-        """Se possível, aumenta o nível do personagem"""
+        """Se possível, aumenta o nível do personagem, retorna True se há um novo nível, False senão"""
+        from codigos.variaveis import efeitos
         while self.exp >= self.niveis[self.nivel]:
             if efeitos:
                 levelup.play()

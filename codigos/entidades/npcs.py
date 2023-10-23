@@ -49,6 +49,7 @@ class Npc(pygame.sprite.Sprite):
 class Mago(Npc):
     def __init__(self, pos):
         Npc.__init__(self)
+        from codigos.variaveis import fps
         self.anim_rate = 0.2 * (30 / fps)
         self.vida, self.vida_max = 100, 100
         self.nivel = 30
@@ -166,7 +167,7 @@ class Mercador(Npc):
         self.nome = 'Nome'
         self.mercadorias = []
         self.rect = self.image.get_rect()
-        self.rect.center = pos
+        self.rect.centerx, self.rect.centery = pos[0], pos[1]
         self.visao = 70
 
     def update(self):

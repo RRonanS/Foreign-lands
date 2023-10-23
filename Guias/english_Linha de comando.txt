@@ -1,0 +1,30 @@
+Commands:
+     * print_e
+         Prints all game entities
+     * info_e <number> <class (optional)>
+         Prints all attributes of the entity of such a number, or the Nth entity of a given class
+     * matar <number> <class(optional)>
+         Kill the entity of such number, or the Nth entity of such class, pass number as -1 to kill all
+         class entities
+     * xp <value>
+         Adds xp to the character
+     * coins <value>
+         Add coins to the character
+     * set_atr <entity_number> <attribute> <value>
+         Arrow for a given entity its attribute
+     * set_atrc <attribute> <value>
+         Sets a character attribute
+     * add_item <item> <quantity>
+         Adds an item to the character's inventory
+         * Items:
+             Pocao_vida -> Healing potion
+     * spawn_cords <class> <x> <y>
+         Spawns an entity of such class at the past coordinates
+         * Classes:
+             Skeleton
+             Eye
+             Goblin
+             Mushroom
+             BringerDeath
+     * spawn <class>
+         Spawns an entity of that class at random coordinates within the scenario

@@ -51,3 +51,16 @@ class Casa(pygame.sprite.Sprite):
 
     def update(self):
         pass
+
+
+class Portal(pygame.sprite.Sprite):
+    """Classe para representar um portal entre cenarios"""
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.tipo = 'portal'
+        self.destino = 0, 0
+        self.coord_destino = 0, 0
+
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)

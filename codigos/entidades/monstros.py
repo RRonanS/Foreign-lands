@@ -1,7 +1,7 @@
 # Este arquivo possui os construtores para todos monstros usados no jogo e funções
 # para gerar monstros pelo mapa
 import pygame.sprite
-from ..variaveis import screen_size, exp_mult, fps, efeitos
+from ..variaveis import screen_size, exp_mult, fps
 from random import randint, random
 from ..mapa.decorativo import Coin
 from codigos.entidades.gerenciador_imagens import imagens
@@ -17,6 +17,7 @@ class Monstro(pygame.sprite.Sprite):
     """Classe pai para representar todas entidades"""
 
     def __init__(self):
+        from codigos.variaveis import fps
         pygame.sprite.Sprite.__init__(self)
         self.visao = 0.3
         self.vel = 2 * (30 / fps)
@@ -53,6 +54,7 @@ class Monstro(pygame.sprite.Sprite):
 
     def play_sound(self, sound):
         """Toca algum som relacionado ao inimigo"""
+        from codigos.variaveis import efeitos
         if sound in self.sounds and efeitos:
             self.sounds[sound].play()
         return
@@ -308,7 +310,7 @@ class BringerDeath(Esqueleto):
         self.vida_max, self.vida = 100, 100
         self.dano, self.vel, self.peso = 7, 2.5 * (30 / fps), 10
         self.visao = 0.25
-        self.exp = 300 * exp_mult
+        self.exp = 2000 * exp_mult
         self.spell_cooldown, self.spell_total = 0,  15 * fps
         self.spell_range = 2  # Range quadrado em * tamanho do monstro
         self.spell_dmg = 5

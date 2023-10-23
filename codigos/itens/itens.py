@@ -84,7 +84,7 @@ class Pocao_vida(Pocao):
         # Do_menu indica se ela é um exibivel de menu
         Pocao.__init__(self)
         self.atributo = 'aumentar_vida'
-        self.nome = 'Poção de cura'
+        self.nome = 'pocao de cura'
         self.img_sg = diretorios['vida']
         self.img = imagens['vida']
         self.bonus = 10
@@ -100,7 +100,7 @@ class Pocao_vidaGrande(Pocao_vida):
         Pocao_vida.__init__(self)
         self.img_sg = diretorios['vidagrande']
         self.img = imagens['vidagrande']
-        self.nome = 'Poção de cura G'
+        self.nome = 'pocao de cura G'
         self.classe = 'Pocao_vidaGrande'
         self.bonus = 20
         self.valor = 27

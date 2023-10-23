@@ -17,6 +17,7 @@ class Balao(pygame.sprite.Sprite):
         automaticamente quebrar o texto. Formatos textuais:
         / indica quebra de frase e \ quebra de linha"""
         pygame.sprite.Sprite.__init__(self)
+        from codigos.variaveis import fps
         self.textos = []
         self.tipo = 'balao'
 

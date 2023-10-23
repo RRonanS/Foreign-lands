@@ -1,10 +1,15 @@
 # Este arquivo contém funções auxiliares usadas pelo programa
+import os
+
 import pygame.transform
+
+from codigos.outros.alerta import Alerta
 from codigos.variaveis import screen_size, info as info_s, update_range as ur, draw_range as dr
 from codigos.ambiente.textuais import fonte1, fonte2, vermelho, verde, preto, amarelo
 
 width, height = screen_size
 pygame.display.set_mode(screen_size)
+nivel_base = 0  # Nivel atual do personagem
 
 
 def img_load(sheet, size, resize=(32, 32), flip=False):
@@ -24,21 +29,22 @@ def img_load(sheet, size, resize=(32, 32), flip=False):
 
 
 def level(target, tela, ajuste=(-14, -8)):
-    '''Mostra o nível do jogador na tela'''
+    """Mostra o nível do jogador na tela"""
     nivel = target.nivel
     pos = target.rect.centerx+ajuste[0], target.rect.centery+ajuste[1]
     formatado = fonte1.render(str(nivel), True, vermelho)
     tela.blit(formatado, pos)
 
 
-def dados(target, personagem, tela):
-    '''Mostra dados do jogador na tela'''
+def dados(target, personagem, tela, tl):
+    """Mostra dados do jogador na tela"""
     atual, restante = int(target.exp), int(target.niveis[target.nivel])
     formatado = fonte2.render(f'{atual}/{restante} XP', True, verde)
     if personagem.coins == 0 or personagem.coins>1:
         adj = 's'
     else: adj = ''
-    budget = fonte2.render(f'{personagem.coins} coin{adj}', True, amarelo)
+    coin_tl = tl('moeda'+adj)
+    budget = fonte2.render(f'{personagem.coins} {coin_tl}', True, amarelo)
     tela.blit(formatado, (width-formatado.get_width(), 0))
     tela.blit(budget, (width-budget.get_width(), formatado.get_height()))
 
@@ -52,7 +58,7 @@ def boss_lbl(target, tela):
 
 
 def health_bar(target, tela):
-    '''Mostra na tela a barra de vida da entidade target'''
+    """Mostra na tela a barra de vida da entidade target"""
     size = 12
     pos = target.rect.center
     prop = target.vida/target.vida_max
@@ -72,11 +78,11 @@ def info(num, personagem, tela, fps):
         tela.blit(val3, (0, val.get_height()*2))
 
 
-def dead(personagem, tela):
+def dead(personagem, tela, tl):
     """Mostra a mensagem de morte na tela"""
-    texto1 = fonte2.render(f'Você está caído', True, vermelho)
-    texto2 = fonte2.render(f'Pressione R para reviver', True, vermelho)
-    texto3 = fonte1.render(f'Custa {personagem.get_custoreviver()} coins, esc para sair', True, preto)
+    texto1 = fonte2.render(tl('Você está caido'), True, vermelho)
+    texto2 = fonte2.render(tl('Pressione R para reviver'), True, vermelho)
+    texto3 = fonte1.render(tl(f'Custa {personagem.get_custoreviver()} moedas, esc para sair'), True, preto)
     tela.blit(texto1, ((width//2)-texto1.get_width()//2, (height//2)-texto1.get_height()//2))
     tela.blit(texto2, ((width//2)-texto2.get_width()//2, (height//2)+texto1.get_height()//2))
     tela.blit(texto3, ((width//2)-texto3.get_width()//2, (height//2) + texto1.get_height()*1.5))
@@ -116,6 +122,7 @@ def update_to_draw(rect, updt, draw):
 
 
 def update_pos(target, inimigos, drops, npcs):
+    """Atualiza a posição das entidades conforme o jogador move entre os cenários"""
     if target is not None:
         t, v = target
         for i in inimigos.sprites():
@@ -129,6 +136,7 @@ def update_pos(target, inimigos, drops, npcs):
 
 
 def grupo_menu(personagem, tam):
+    """Cria o grupo com as sprites clicaveis de itens"""
     grupo = pygame.sprite.Group()
     r = (1-tam)/2
     acresc = 32
@@ -140,3 +148,21 @@ def grupo_menu(personagem, tam):
             grupo.add(x)
             i += acresc
     return grupo
+
+
+def alerta_level_up(alertas, nivel_base, nivel_atual, tl):
+    """Gera alertas de novo nível do usuário"""
+    if nivel_atual > nivel_base:
+        if len(alertas) == 0:
+            alertas.add(Alerta(tl("novo nivel disponivel, P para aplicar")))
+        return nivel_atual
+    return nivel_base
+
+
+def deletar_save(save):
+    """Deleta save do usuario cujo arquivo é passado como parametro"""
+    if os.path.exists('dados/'+save):
+        os.remove('dados/'+save)
+        print(f'O arquivofoi excluído com sucesso.')
+    else:
+        print(f'O arquivo não existe.')

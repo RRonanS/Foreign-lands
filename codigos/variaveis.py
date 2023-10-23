@@ -1,4 +1,6 @@
 # Variáveis de jogo
+import json
+
 screen_size = 704, 448
 # Precisa implicar que alterar screen size altera char size  e block size
 char_size = (96, 96)
@@ -7,12 +9,12 @@ tamanho_barra_itens = 0.3
 dificuldade = 1
 exp_mult = 1
 exigencia_niveis = 0.7  # Define a taxa de aumento do custo de xp para subir de nivel
-musica, efeitos, volume = True, True, 0.3
+musica, efeitos, volume = False, False, 0.3
 imortal = False
 colide = True  # Se o personagem colide com entidades
 colide_tolerancia = 32
 info = True
-load = True  # Se deve carregar os dados json ao iniciar
+load = False  # Se deve carregar os dados json ao iniciar
 console = True  # Se deve dar acesso ao console de comandos do jogo
 
 # Desempenho
@@ -24,6 +26,42 @@ draw_range = (screen_size[0], screen_size[1])  # Distancia de visao dos inimigos
 acrescimos = {'vida': 5, 'dano': 2, 'velocidade': 2 * (30 / fps), 'sorte': 5}
 
 idioma = 'portugues'
-versao = 0.2
+versao = 0.21
 devs = ['RRonan']
-update = '03/07/2023'
+update = '23/10/2023'
+
+
+def load_config():
+    """Carrega dados do arquivo configuração"""
+    global idioma, efeitos, musica, volume, load, fps, console
+    try:
+        with open('dados/configuracao.json', 'r') as arq:
+            data = json.load(arq)
+            if data['idioma']:
+                idioma = data['idioma']
+            if data['sons']:
+                if data['sons']['efeitos']:
+                    efeitos = True
+                else:
+                    efeitos = False
+                if data['sons']['musica']:
+                    musica = True
+                else:
+                    musica = False
+                if data['sons']['volume']:
+                    volume = data['sons']['volume']
+            if data['console']:
+                console = data['console']
+            else:
+                console = False
+            if data['fps']:
+                fps = data['fps']
+            if data['load_save']:
+                load = True
+            else:
+                load = False
+    except:
+        print('[Erro] Arquivo configuracao.json não encontrado na pasta dados')
+
+
+load_config()

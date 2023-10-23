@@ -1,10 +1,11 @@
 {
-  "versao": 0.2,
-  "linguagem": "portugues",
-  "save_carregado": null,
+  "idioma": "portugues",
+  "load_save": true,
   "sons": {
-    "ativo": true,
+    "musica": true,
+    "efeitos": true,
     "volume": 1
   },
-  "console": true
+  "console": true,
+  "fps": 30
 }

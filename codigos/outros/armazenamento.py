@@ -1,5 +1,4 @@
 import json
-from codigos.variaveis import load
 import codigos.entidades.monstros as monstros
 import codigos.entidades.bosses as bmod
 import codigos.entidades.npcs as npcmod
@@ -10,10 +9,11 @@ dir = 'dados/'
 
 def escrever(personagem, inimigos, npcs, cenario):
     """Recebe os objetos do jogo e armazena em formato json"""
+    from codigos.variaveis import fps
     data = {
         "personagem": {
             "nivel": personagem.nivel,
-            "skills": [personagem.vida_max, personagem.dano, personagem.vel, personagem.sorte],
+            "skills": [personagem.vida_max, personagem.dano, personagem.vel / (30/fps), personagem.sorte],
             "vida": personagem.vida,
             "pontos": personagem.pontos,
             "coins": personagem.coins,
@@ -42,7 +42,7 @@ def escrever(personagem, inimigos, npcs, cenario):
     for x in npcs.sprites():
         cont += 1
         data['npcs'][str(cont)] = {
-            "pos": [x.rect.bottomleft[0], x.rect.bottomleft[1]],
+            "pos": [x.rect.centerx, x.rect.centery],
             "tipo": type(x).__name__,
             "itens": {
                 type(m).__name__: {'qtd': m.quantidade} for m in x.mercadorias
@@ -55,6 +55,7 @@ def escrever(personagem, inimigos, npcs, cenario):
 
 def ler(personagem, inimigos, npcs, bosses):
     """Lê os dados armazenados e carrega nos objetos, retorna False se nao leu"""
+    from codigos.variaveis import load, fps
     try:
         with open(f'{dir}player_data.json', 'r') as json_file:
             d = json.load(json_file)
@@ -65,7 +66,7 @@ def ler(personagem, inimigos, npcs, bosses):
     if len(d) > 0 and load:
         p = d['personagem']
         personagem.nivel, personagem.vida_max = p['nivel'], p['skills'][0]
-        personagem.dano, personagem.vel = p['skills'][1], p['skills'][2]
+        personagem.dano, personagem.vel = p['skills'][1], p['skills'][2] * (30/fps)
         personagem.sorte, personagem.vida = p['skills'][3], p['vida']
         personagem.pontos, personagem.coins = p['pontos'], p['coins']
         personagem.exp = p['exp']

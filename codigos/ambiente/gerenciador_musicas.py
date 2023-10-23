@@ -1,6 +1,4 @@
-from random import random
-
-from codigos.variaveis import musica, efeitos, volume
+from random import random, randint
 import pygame
 from time import sleep
 from codigos.ambiente.sons import efeitos_cenarios
@@ -78,15 +76,16 @@ class GerenciadorMusica:
 
         self.playing = 0
         self.cenario = 0, 0
+        self.effect_thread_run = True
 
     def run(self, cenario):
         """Executa o gerenciamento das musicas do jogo"""
+        from codigos.variaveis import musica, volume
         x, y = cenario[0], cenario[1]
         self.cenario = cenario
         old = self.playing
         if musica:
             if self.playing != 5 and y <= -1:
-                print('a')
                 pygame.mixer.music.load(self.musicas[5])
                 self.playing = 5
             elif x <= 5 and y == 0 and self.playing != 1:
@@ -105,22 +104,30 @@ class GerenciadorMusica:
 
     def effect_thread(self):
         """Thread responsavel por efeitos sonoros aleatorios ao fundo"""
+        from codigos.variaveis import musica
         if not musica:
             return
-        while True:
-            sleep(5)
-            x, y = self.cenario
-            cenario = f'{x} {y}'
-            if cenario in self.cenarios_efeitos:
-                for efeito in self.cenarios_efeitos[cenario]['efeitos']:
-                    if random() <= self.cenarios_efeitos[cenario]['efeitos'][efeito]['chance']:
-                        efeitos_cenarios[efeito].play()
-                        break
+        while self.effect_thread_run:
+            sleep(1)
+            if randint(1, 5) == 5:
+                x, y = self.cenario
+                cenario = f'{x} {y}'
+                if cenario in self.cenarios_efeitos:
+                    for efeito in self.cenarios_efeitos[cenario]['efeitos']:
+                        if random() <= self.cenarios_efeitos[cenario]['efeitos'][efeito]['chance']:
+                            efeitos_cenarios[efeito].play()
+                            break
 
     def play_death(self):
         """Toca o som quando o jogador morre"""
+        from codigos.variaveis import musica, volume
         if self.playing != 3 and musica:
             pygame.mixer.music.load(self.musicas[3])
             self.playing = 3
             pygame.mixer.music.play(-1)
             pygame.mixer.music.set_volume(volume)
+
+    def stop(self):
+        """Desativa o modulo"""
+        pygame.mixer.music.stop()
+        self.effect_thread_run = False

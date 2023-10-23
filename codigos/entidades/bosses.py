@@ -53,7 +53,7 @@ class Boss1(Esqueleto):
             self.boost_left -= 1
 
 
-class Executioner(Esqueleto):
+class Boss2(Esqueleto):
     """Boss2, Executioner"""
     def __init__(self):
         Esqueleto.__init__(self)
@@ -75,7 +75,7 @@ class Executioner(Esqueleto):
         self.dano_critico = 15
         self.vel = 2
         self.visao = 0.25
-        self.exp = 3000*exp_mult
+        self.exp = 5000*exp_mult
         self.coin_drop = (100, 100)
         self.droprate = {'Pocao_vidaGrande': 1, 'Pocao_velocidade': 1, 'Pocao_dano': 1}
         self.anim_mult = 0.25 * (30 / fps)
@@ -126,7 +126,7 @@ def boss_group(lis, ini, grupo):
     boss1.rect.centerx = int(width*9.5)
     boss1.rect.centery = height//2
 
-    boss2 = Executioner()
+    boss2 = Boss2()
     boss2.rect.centerx = int(width*5.5)
     boss2.rect.centery = -height*4.5
 
