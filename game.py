@@ -298,8 +298,12 @@ def run():
         spell_sprites.update()
         spell_sprites.draw(tela)
         for sprite in sprites_draw.sprites():
-            if sprite.tipo not in ['balao', 'decorativo', 'pocao']:
+            if sprite.tipo not in ['balao', 'decorativo', 'pocao', 'projetil']:
                 health_bar(sprite)
+            if sprite.tipo == 'projetil':
+                # Verifica colisão do projetil com o jogador
+                if pygame.sprite.collide_mask(sprite, personagem):
+                    sprite.colidiu(personagem)
 
         t4 = Thread(target=update_to_draw, args=[personagem.rect, sprites_update, sprites_draw])
         t4.start()
@@ -318,7 +322,7 @@ def run():
             if pygame.sprite.collide_mask(inimigo.ataque_sprite(), personagem) is not None:
                 # Inimigo colide com o personagem
                 if personagem.vida >= 0:
-                    # Inicia um movimento de ataque
+                    # Inicia um movimento de ataquea
                     inimigo.atacar()
                 inimigo.dir = 0, 0
                 if inimigo.ataque:
@@ -328,8 +332,10 @@ def run():
 
                     if inimigo.ataque_critico:
                         personagem.vida -= inimigo.dano_critico
+                        personagem.curando = False
                     else:
                         personagem.vida -= inimigo.dano
+                        personagem.curando = False
 
                     if personagem.vida <= 0:
                         gerenciador_musica.play_death()
@@ -412,6 +418,7 @@ def run():
             spell.rect = personagem.rect
             if spell.end:
                 personagem.vida -= spell.dmg
+                personagem.curando = False
                 spell.kill()
 
         if personagem.is_dead():
@@ -436,4 +443,4 @@ def run():
     if console:
         linha_comandos.end()
         thread_comandos.join(timeout=1)
-    #pygame.quit()  # Remover na versão release
+    # pygame.quit()  # Remover na versão release
