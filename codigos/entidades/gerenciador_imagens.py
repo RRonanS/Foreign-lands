@@ -5,7 +5,7 @@ from codigos.outros.auxiliares import img_load
 
 diretorio_base = 'arquivos/imagens/monstros/'
 sprite_size = 150, 150
-imagens = {'monstros': {}, 'npcs': {}, 'bosses': {}, 'personagem': {}}
+imagens = {'monstros': {}, 'npcs': {}, 'bosses': {}, 'personagem': {}, 'projetis': {}}
 
 #  Imagens de monstros
 
@@ -125,7 +125,6 @@ atualimages = {'idle': img_load(idle, sprite_size, size, True),
                'summon': img_load(summoning, sprite_size, size, True),
                'skill': img_load(skill, sprite_size, size, True)}
 imagens['bosses']['executioner'] = atualimages
-sprite_size = 150, 150
 
 
 # Imagens do personagem
@@ -147,3 +146,50 @@ atualimages['jump_fall'] = img_load(jump_fall, (120, 80), char_size)
 atualimages['death'] = img_load(death, (120, 80), char_size)
 atualimages['foot'] = img_load(foot, (120, 80), char_size)
 imagens['personagem'] = atualimages
+
+# Imagens do Golem
+diretorio = diretorio_base+'Golem/'
+size = char_size[0]*1, char_size[1]*1
+sprite_size = 100, 100
+idle = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+attack = pygame.image.load(diretorio + 'Attack.png').convert_alpha()
+walk = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+dead = pygame.image.load(diretorio + 'Death.png').convert_alpha()
+projetil = pygame.image.load(diretorio + 'Projetil.png').convert_alpha()
+atualimages = {'idle': img_load(idle, sprite_size, size, True),
+               'attack': img_load(attack, sprite_size, size, True),
+               'walk': img_load(walk, sprite_size, size, True),
+               'death': img_load(dead, sprite_size, size, True),
+               'projetil': img_load(projetil, sprite_size, size, True)
+               }
+imagens['monstros']['golem'] = atualimages
+imagens['projetis']['golem'] = atualimages['projetil']
+
+# Imagens do Lobo
+diretorio = diretorio_base+'Wolf/'
+size = char_size[0]*0.5, char_size[1]*0.5
+sprite_size = 64, 64
+idle = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+attack = pygame.image.load(diretorio + 'Walk.png').convert_alpha()
+dead = pygame.image.load(diretorio + 'Death.png').convert_alpha()
+atualimages = {'idle': img_load(idle, sprite_size, size, True),
+               'walk': img_load(attack, sprite_size, size, True),
+               'attack': img_load(attack, sprite_size, size, True),
+               'death': img_load(dead, sprite_size, size, True),
+               }
+imagens['monstros']['lobo'] = atualimages
+
+# Imagens do Boss3 Demon
+diretorio = diretorio_base+'Demon/'
+size = char_size[0]*2.5, char_size[1]*2.5
+sprite_size = 864, 480
+idle = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+attack = pygame.image.load(diretorio + 'Attack.png').convert_alpha()
+walk = pygame.image.load(diretorio + 'Walk.png').convert_alpha()
+dead = pygame.image.load(diretorio + 'Death.png').convert_alpha()
+atualimages = {'idle': img_load(idle, sprite_size, size, True),
+               'attack': img_load(attack, sprite_size, size, True),
+               'walk': img_load(walk, sprite_size, size, True),
+               'death': img_load(dead, sprite_size, size, True)
+               }
+imagens['bosses']['demon'] = atualimages

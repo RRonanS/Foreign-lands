@@ -22,7 +22,7 @@ class Boss1(Esqueleto):
         self.is_boss = True
         self.lock = 9, 0  # Cenario do boss a bloquear saida do player
         self.unlocks = []  # Cenarios a serem desbloqueados para acesso
-        for x in range(5):  # Desbloqueia todo o canto superior direito do mapa
+        for x in range(5):  # Desbloqueia o canto superior direito do mapa
             for y in range(-5, 0):
                 self.unlocks.append((x, y))
 
@@ -69,6 +69,9 @@ class Boss2(Esqueleto):
 
         self.lock = 5, -5  # Cenario do boss a bloquear saida do player
         self.unlocks = []  # Cenarios a serem desbloqueados para acesso
+        for x in range(-5, 0, 1):  # Desbloqueia o canto esquerdo do mapa
+            for y in range(-5, 5, 1):
+                self.unlocks.append((x, y))
 
         self.vida, self.vida_max = 200, 200
         self.dano, self.peso = 10, 20
@@ -120,6 +123,41 @@ class Boss2(Esqueleto):
             self.animar = False
 
 
+class Boss3(Esqueleto):
+    """Boss3"""
+    def __init__(self):
+        Esqueleto.__init__(self)
+        self.tipo = 'boss'
+        self.is_boss = True
+
+        self.lock = -8, 0  # Cenario do boss a bloquear saida do player
+        self.unlocks = []  # Cenarios a serem desbloqueados para acesso
+
+        self.vida, self.vida_max = 800, 800
+        self.dano, self.peso = 14, 20
+        self.dano_critico = 17
+        self.vel = 2
+        self.visao = 0.7
+        self.exp = 10000*exp_mult
+        self.coin_drop = (200, 300)
+        self.droprate = {'Pocao_vida': 0.8, 'Pocao_vidaGrande': 0.50,
+                         'Pocao_velocidade': 0.4, 'Pocao_dano': 0.40,
+                         'Pocao_vidaGigante': 0.2, 'Pocao_regen': 0.3}
+        self.anim_mult = 0.5 * (30 / fps)
+
+        self.images = imagens['demon']
+        self.mask = pygame.mask.from_surface(self.images['idle'][0])
+        self.rect = self.images['idle'][0].get_rect()
+
+    def update_especifico2(self):
+        """Inverte o flip da imagem"""
+        if self.sector == 'walk':
+            if self.flip:
+                self.flip = False
+            else:
+                self.flip = True
+
+
 def boss_group(lis, ini, grupo):
     """Recebe a lista de sprites, a lista de inimigos e gera os bosses do jogo"""
     boss1 = Boss1()
@@ -130,9 +168,18 @@ def boss_group(lis, ini, grupo):
     boss2.rect.centerx = int(width*5.5)
     boss2.rect.centery = -height*4.5
 
+    boss3 = Boss3()
+    boss3.rect.centerx = int(-1*width*7.5)
+    boss3.rect.centery = height//2
+
     grupo.add(boss1)
     lis.add(boss1)
     ini.add(boss1)
+
     grupo.add(boss2)
     lis.add(boss2)
     ini.add(boss2)
+
+    grupo.add(boss3)
+    lis.add(boss3)
+    ini.add(boss3)

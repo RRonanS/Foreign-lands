@@ -1,15 +1,17 @@
 # Este arquivo possui os construtores para todos monstros usados no jogo e funções
 # para gerar monstros pelo mapa
 import pygame.sprite
+
+from .projetil import Projetil
 from ..variaveis import screen_size, exp_mult, fps
 from random import randint, random
 from ..mapa.decorativo import Coin
-from codigos.entidades.gerenciador_imagens import imagens
+from codigos.entidades.gerenciador_imagens import imagens as imagens_todas
 import codigos.itens.itens as itens
 from codigos.ambiente.sons import monstros_sounds
 
 width, height = screen_size
-imagens = imagens['monstros']
+imagens = imagens_todas['monstros']
 sounds = monstros_sounds
 
 
@@ -66,13 +68,15 @@ class Esqueleto(Monstro):
     class sprite_espada(pygame.sprite.Sprite):
         """Classe chamada apenas durante ataques para calculo de colisão da espada"""
 
-        def __init__(self, img, pos, flip, index=6):
+        def __init__(self, img, pos, flip, index=6, offsets=(0, 0)):
             pygame.sprite.Sprite.__init__(self)
             if index >= len(img):
                 index = len(img) - 1
             self.image = img[index]
             self.rect = self.image.get_rect()
-            self.rect = pos
+            self.rect.topleft = pos.topleft[0], pos.topleft[1]
+            self.rect.width += offsets[0]
+            self.rect.height += offsets[1]
             if flip:
                 self.mask = pygame.mask.from_surface(pygame.transform.flip(
                     img[index], True, False
@@ -115,10 +119,14 @@ class Esqueleto(Monstro):
 
     def ataque_sprite(self):
         """Gera a sprite usada no cálculo de colisoes"""
-        return self.sprite_espada(self.images['attack'], self.rect, self.flip)
+        return self.sprite_espada(self.images['attack'], self.rect, self.flip, offsets=(32, 32))
 
     def update_especifico(self):
         """Update especifico para ser editado em subclasses, representando atualizações individuais"""
+        pass
+
+    def update_especifico2(self):
+        """Update especifico pós atualização de setor"""
         pass
 
     def rand_walk(self):
@@ -156,6 +164,8 @@ class Esqueleto(Monstro):
             elif self.sector == 'death':
                 self.vel = 0
                 self.dead = True
+
+        self.update_especifico2()
 
         if self.flip:
             img = pygame.transform.flip(self.images[self.sector][int(self.index)],
@@ -303,7 +313,7 @@ class BringerDeath(Esqueleto):
         Esqueleto.__init__(self)
         self.droprate = {'Pocao_vida': 0.20, 'Pocao_vidaGrande': 0.10,
                          'Pocao_velocidade': 0.05, 'Pocao_dano': 0.02}
-        self.coin_drop = (5, 10)
+        self.coin_drop = (10, 20)
         self.has_spell = True
         self.spelling = False
 
@@ -366,3 +376,112 @@ class Executor(Esqueleto):
         self.images = imagens['executor']
 
         self.image = self.images[self.sector][self.index]
+
+
+class Shooter(Esqueleto):
+    """Classe base para monstros que disparam projeteis, recebe como parametro o grupo
+    para adicionar os projetis"""
+    class sprite_colide(pygame.sprite.Sprite):
+        """Sprite para detectar colisao"""
+        def __init__(self, img, rect):
+            pygame.sprite.Sprite.__init__(self)
+            self.image = img
+            self.rect = self.image.get_rect()
+            self.rect.centerx, self.rect.centery = rect.centerx, rect.centery
+            self.mask = pygame.mask.from_surface(self.image)
+
+    def __init__(self):
+        Esqueleto.__init__(self)
+        self.pr_vel = 1
+        self.visao_ataque = 1
+
+    def update_especifico2(self):
+        """Override do método, verifica se está atacando para gerar a sprite do projetil"""
+        if self.ataque:
+            self.ataque = False
+            projetil = self.gerar_projetil(self.dir)
+            if projetil is not None:
+                projetil.rect.center = self.rect.center
+                self.groups()[0].add(projetil)
+
+    def gerar_projetil(self, dir):
+        """Retorna uma instancia do projetil da classe"""
+        return None
+
+    def ataque_sprite(self):
+        m = pygame.transform.scale(self.images['attack'][0],
+                                   (width*self.visao_ataque, height*self.visao_ataque))
+        return self.sprite_colide(m, self.rect)
+
+
+class Golem(Shooter):
+    """Monstro golem"""
+    def __init__(self):
+        Shooter.__init__(self)
+
+        self.droprate = {'Pocao_vida': 0.5, 'Pocao_vidaGrande': 0.25,
+                         'Pocao_velocidade': 0.10, 'Pocao_dano': 0.10,
+                         'Pocao_vidaGigante': 0.08, 'Pocao_regen': 0.05}
+        self.coin_drop = (15, 30)
+
+        self.vida_max, self.vida = 120, 120
+        self.dano, self.vel, self.peso = 8, 2 * (30 / fps), 10
+        self.visao = 0.7
+        self.visao_ataque = 0.5
+        self.anim_mult *= 0.8
+        self.exp = 3000 * exp_mult
+        self.sector, self.index = 'idle', 0
+        self.pr_vel = 2
+        self.images = imagens['golem']
+
+        self.image = self.images[self.sector][self.index]
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.images['attack']
+                                             [len(self.images['attack']) - 1])
+
+    def gerar_projetil(self, dir):
+        """Gera projetil especifico do golem"""
+        return Projetil(imagens_todas['projetis']['golem'], self.pr_vel, self.dano, dir=dir)
+
+
+class Lobo(Esqueleto):
+    """Monstro lobo"""
+    def __init__(self):
+        Esqueleto.__init__(self)
+
+        self.droprate = {'Pocao_vida': 0.3, 'Pocao_vidaGrande': 0.10,
+                         'Pocao_velocidade': 0.2, 'Pocao_dano': 0.30,
+                         'Pocao_vidaGigante': 0.02, 'Pocao_regen': 0.02}
+        self.coin_drop = (10, 20)
+
+        self.vida_max, self.vida = 50, 50
+        self.dano, self.vel, self.peso = 4, 3.5 * (30 / fps), 1
+        self.visao = 0.3
+        self.exp = 1000 * exp_mult
+        self.anim_mult = 0.25 * (30 / fps)
+
+        self.images = imagens['lobo']
+
+        self.image = self.images[self.sector][self.index]
+        self.rect = self.image.get_rect()
+
+        self.rect.width -= 8  # Ajustes para colisao
+        self.rect.height -= 8
+
+        self.mask = pygame.mask.from_surface(self.images['attack']
+                                             [len(self.images['attack']) - 1])
+
+    def update_especifico2(self):
+        """Muda a inversao"""
+        if self.sector == 'walk':
+            if self.flip:
+                self.flip = False
+            else:
+                self.flip = True
+
+    def ataque_sprite(self):
+        """Gera o sprite de deteccao de colisoes"""
+        m = pygame.transform.scale(self.images['attack'][0],
+                                   (self.images['attack'][0].get_width()*2,
+                                    self.images['attack'][0].get_height()*2))
+        return self.sprite_espada([m], self.rect, self.flip, 0)

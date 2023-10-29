@@ -67,9 +67,12 @@ def health_bar(target, tela):
         pygame.draw.line(tela, verde, pos, (pos[0]+int(size*prop), pos[1]))
 
 
-def info(num, personagem, tela, fps):
-    """Mostra o numero do cenario na tela"""
-    if info_s:
+def info(num, personagem, tela, fps, cenarios=False):
+    """Mostra informações de jogo na tela"""
+    if cenarios:
+        val = fonte1.render(f'X: {num[0]}, Y: {num[1]}', True, preto)
+        tela.blit(val, (0, 0))
+    elif info_s:
         val = fonte1.render(f'X: {num[0]}, Y: {num[1]}', True, preto)
         val2 = fonte1.render(f'W: {personagem.rect.centerx}, H: {personagem.rect.centery}', True, preto)
         val3 = fonte1.render('Fps: '+str(int(fps)), True, preto)

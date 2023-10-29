@@ -7,5 +7,6 @@
     "volume": 1
   },
   "console": true,
-  "fps": 30
+  "fps": 30,
+  "cenario_load": "dados/cenarios_data.json"
 }
