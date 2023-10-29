@@ -50,6 +50,8 @@ class Personagem(pygame.sprite.Sprite):
         self.animar_freq = self.animar_freq_backup = 0.30 * (30/fps)
         self.coins, self.pontos, self.sorte, self.exp = 0, 0, 0, 0
         self.buffs = {}
+        self.curando = False
+        self.cura_vel = 0
 
         # Armazenamento das imagens do personagem
         self.images = images
@@ -112,6 +114,7 @@ class Personagem(pygame.sprite.Sprite):
             self.animar = False
             self.sector = 'death'
         self.verificar_buffs()
+        self.curar()
         # Parte responsável pela animação do personagem
         self.index += self.animar_freq
         if self.index >= len(self.images[self.sector]):
@@ -209,6 +212,26 @@ class Personagem(pygame.sprite.Sprite):
         self.dano += qtd
         self.buffs['dano'] = {'valor': qtd, 'tempo_restante': tempo}
         return True
+
+    def regenerar_vida(self, qtd, tempo):
+        """Regenera a vida do personagem lentamente"""
+        from codigos.variaveis import fps
+        if self.vida == self.vida_max:
+            return False
+        self.curando = True
+        self.cura_vel = qtd / fps
+        return True
+
+    def curar(self):
+        """Cura o personagem com base na regeneracao"""
+        if self.sector == 'death':
+            self.curando = False
+            return False
+        if self.curando:
+            if self.vida < self.vida_max:
+                self.vida = min(self.vida_max, self.vida+self.cura_vel)
+            else:
+                self.curando, self.cura_vel = False, 0
 
     def add_item(self, obj):
         """Adciona um item ao inventario"""

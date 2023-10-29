@@ -10,7 +10,7 @@ amarelo = 255, 255, 0
 branco = 255, 255, 255
 roxo_claro = 255, 125, 255
 
-
+fonte0 = font.SysFont('arial', 8, True, True)
 fonte1 = font.SysFont('arial', 12, True, True)
 fonte2 = font.SysFont('arial', 20, True, True)
 fonte3 = font.SysFont('arial', 30, True, True)

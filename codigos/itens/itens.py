@@ -7,12 +7,16 @@ imagens = {
     'vida': pygame.transform.scale(pygame.image.load(dir + 'pocao_vida.png').convert_alpha(), (32, 32)),
     'vidagrande': pygame.transform.scale(pygame.image.load(dir + 'pocao_vida2.png').convert_alpha(), (32, 32)),
     'velocidade': pygame.transform.scale(pygame.image.load(dir + 'pocao_velocidade.png').convert_alpha(), (32, 32)),
-    'dano': pygame.transform.scale(pygame.image.load(dir + 'pocao_dano.png').convert_alpha(), (32, 32))
+    'dano': pygame.transform.scale(pygame.image.load(dir + 'pocao_dano.png').convert_alpha(), (32, 32)),
+    'vidagigante': pygame.transform.scale(pygame.image.load(dir + 'pocao_vida3.png').convert_alpha(), (32, 32)),
+    'regen': pygame.transform.scale(pygame.image.load(dir + 'pocao_regeneracao.png').convert_alpha(), (32, 32))
 }
 diretorios = {'vida': dir + 'pocao_vida.png',
               'vidagrande': dir + 'pocao_vida2.png',
               'velocidade': dir + 'pocao_velocidade.png',
-              'dano': dir + 'pocao_dano.png'}
+              'dano': dir + 'pocao_dano.png',
+              'vidagigante': dir + 'pocao_vida3.png',
+              'regen': dir + 'pocao_regeneracao.png'}
 
 
 class Item(pygame.sprite.Sprite):
@@ -107,6 +111,20 @@ class Pocao_vidaGrande(Pocao_vida):
         self.create_sprite(self.img)
 
 
+class Pocao_vidaGigante(Pocao_vida):
+    """Pocao de vida gigante"""
+
+    def __init__(self):
+        Pocao_vida.__init__(self)
+        self.img_sg = diretorios['vidagigante']
+        self.img = imagens['vidagigante']
+        self.nome = 'pocao de cura G+'
+        self.classe = 'Pocao_vidaGigante'
+        self.bonus = 30
+        self.valor = 35
+        self.create_sprite(self.img)
+
+
 class Pocao_velocidade(Pocao):
     """Pocao que aumenta temporariamente a velocidade do jogador"""
     def __init__(self):
@@ -130,4 +148,17 @@ class Pocao_dano(Pocao):
         self.atributo = 'aumentar_dano'
         self.img_sg = diretorios['dano']
         self.img = imagens['dano']
+        self.create_sprite(self.img)
+
+
+class Pocao_regen(Pocao):
+    """Pocao de regeneração, recupera vida ao longo do tempo"""
+    def __init__(self):
+        Pocao.__init__(self)
+        self.timer = 999
+        self.bonus = 0.5  # Em pontos de vida por segundo
+        self.valor = 70
+        self.atributo = 'regenerar_vida'
+        self.img_sg = diretorios['regen']
+        self.img = imagens['regen']
         self.create_sprite(self.img)

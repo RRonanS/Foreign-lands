@@ -21,7 +21,7 @@ def level_up(char, tl):
     tela.read(timeout=1)
     while True:
         tela.Element('points').update(f'{char.pontos}')
-        tela.Element('val_health').update(f'{char.vida}/{char.vida_max}')
+        tela.Element('val_health').update(f'{int(char.vida)}/{char.vida_max}')
         tela.Element('val_damage').update(f'{char.dano}')
         tela.Element('val_speed').update(f'{char.vel}')
         tela.Element('val_luck').update(f'{char.sorte}%')

@@ -6,6 +6,7 @@ from importlib import reload
 from random import randint
 import pygame
 import sys
+import editor_cenario
 from .button import Button
 from codigos.variaveis import screen_size, fps
 from ..entidades.personagem import Personagem
@@ -64,14 +65,18 @@ def main_menu():
             image=pygame.transform.scale(pygame.image.load(cur_dir + "interfaces/Play Rect.png"), (0.28 * W, 0.15 * H)),
             pos=(W // 2, 0.5 * H), text_input=tl("opcoes"), font=get_font(int(0.00008 * (W * H))),
             base_color="#d7fcd4", hovering_color="White")
+        EDITOR_BUTTON = Button(
+            image=pygame.transform.scale(pygame.image.load(cur_dir + "interfaces/Play Rect.png"), (0.28 * W, 0.15 * H)),
+            pos=(W // 2, 0.66 * H), text_input=tl("cenários"), font=get_font(int(0.00008 * (W * H))),
+            base_color="#d7fcd4", hovering_color="White")
         QUIT_BUTTON = Button(
             image=pygame.transform.scale(pygame.image.load(cur_dir + "interfaces/Play Rect.png"), (0.28 * W, 0.15 * H)),
-            pos=(W // 2, 0.66 * H), text_input=tl("sair"), font=get_font(int(0.00008 * (W * H))),
+            pos=(W // 2, 0.82 * H), text_input=tl("sair"), font=get_font(int(0.00008 * (W * H))),
             base_color="#d7fcd4", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON, EDITOR_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
 
@@ -91,6 +96,8 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
+                if EDITOR_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    editor_cenario.run()
 
         # Animacoes
         sprites.draw(SCREEN)

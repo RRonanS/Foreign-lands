@@ -1,39 +1,53 @@
 # Este arquivo possui os construtores de objetos para o chão do jogo
 import pygame.sprite
+from json import load
 from codigos.variaveis import screen_size, block_size, char_size
 import codigos.mapa.decorativo as decorativo
 
 width, height = screen_size
 
 dir = 'arquivos/imagens/blocos/'
+dir_img = 'arquivos/imagens'
 
 # Conversão de id de bloco para nome da png
-id_png = {1: 'terra1', 2: 'terra2', 3: 'terra3', 4: 'terra4', 5: 'terra5',
-          6: 'volcano1', 7: 'terra', 8: 'grama', 9: 'grama-passagem',
-          10: 'grama-intersec', 11: 'cogumelo1', 12: 'cogumelo2', 13: 'cogumelo3',
-          14: 'brick/brick1', 15: 'brick/brick2', 16: 'brick/brick3', 17: 'brick/brick4',
-          18: 'brick/brick5', 19: 'brick/brick6'}
+try:
+    with open(dir_img+'/tabela.json', 'r', encoding='UTF-8') as arq:
+        id_png = load(arq)['id_png']
+        id_png = {int(key): value for key, value in id_png.items()}
+except Exception as E:
+    # Carrega o padrão
+    print(f'[Erro] ao carregar o arquivo {dir_img}/tabela.png:', E)
+    id_png = {
+        1: 'terra1', 2: 'terra2', 3: 'terra3', 4: 'terra4', 5: 'terra5',
+        6: 'volcano1', 7: 'terra', 8: 'grama', 9: 'grama-passagem',
+        10: 'grama-intersec', 11: 'cogumelo1', 12: 'cogumelo2', 13: 'cogumelo3',
+        14: 'brick/brick1', 15: 'brick/brick2', 16: 'brick/brick3', 17: 'brick/brick4',
+        18: 'brick/brick5', 19: 'brick/brick6', 20: 'brick2/stone1', 21: 'brick2/stone2',
+        22: 'lavaf1', 23: 'lavaf2', 24: 'lavaf3', 25: 'lavaf4'
+    }
 imgs = {
     key: pygame.transform.scale(pygame.image.load(dir+f'{id_png[key]}.png'), block_size)
     for key in id_png
 }
-
 
 class Bloco(pygame.sprite.Sprite):
     """Classe para representar um bloco na tela"""
     def __init__(self, pos, id):
         """Cria um bloco dada sua posição topleft e o id do bloco"""
         pygame.sprite.Sprite.__init__(self)
+        self.tipo = 'bloco'
         self.block_id = id
         try:
             img = imgs[id]
         except:
             raise ValueError('ID de bloco inválido <'+str(id)+'>')
         self.image = img
+        self.fliped = False
         # Define se entidades podem andar sobre esse bloco
         self.walkable = True
         # Se True, diminui a velocidade das entidades no bloco para x%
-        self.slower = (False, 0.0)
+        self.slower = (False, 0)
+        self.damage = (False, 0)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
         self.mask = pygame.mask.from_surface(self.image)
@@ -44,12 +58,26 @@ class Bloco(pygame.sprite.Sprite):
         img = pygame.transform.scale(img, block_size)
         img = pygame.transform.rotate(img, 90)
         self.image = img
+        self.fliped = True
 
     def set_walkable(self, value):
+        """Muda a flag se o bloco é andavel"""
         self.walkable = value
 
     def set_slower(self, value, amount):
+        """Muda a flag de desaceleracao do bloco"""
         self.slower = (value, amount)
+
+    def set_damager(self, value, amount):
+        """Muda a flag do bloco causar dano"""
+        self.damage = value, amount
+
+    def reload(self):
+        """Recarrega a imagem do bloco"""
+        try:
+            self.image = imgs[self.block_id]
+        except:
+            raise ValueError('ID de bloco inválido <'+str(id)+'>')
 
 
 def arredondar(cords):
@@ -77,7 +105,10 @@ class Chao:
         self.acesso = True
         self.background = 0
         self.posicoes = {}
+        self.copia = False
+        self.fonte = '0 0'
         finais = fonte['final']
+        self.finais = finais
         excludex = []
         excludey = []
         # Detecção de Blocos de fronteira com o vazio
@@ -99,6 +130,7 @@ class Chao:
                     if y not in excludey:
                         b_id = source[linha][coluna]['id']
                         if 'mudar_id' in fonte['copia']:
+                            # Muda id do bloco destino
                             if fonte['copia']['mudar_id']:
                                 b_id = fonte['copia']['novo_id']
 
@@ -116,6 +148,7 @@ class Chao:
             inst.rect.topleft = x*block_size[0], y*block_size[1]
             if 'bloqueia' in decor[dec]:
                 if decor[dec]['bloqueia']:
+                    inst.bloqueia = True
                     self.bloqueios[(x*block_size[0], y*block_size[1])] = decor[dec]['blocos']
             self.grupo.add(inst)
 

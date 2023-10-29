@@ -39,6 +39,10 @@ class Coin(pygame.sprite.Sprite):
 
 class Casa(pygame.sprite.Sprite):
     def __init__(self, index, blocos=1):
+        self.tipo = 'decorativo'
+        self.index = index
+        self.blocos = blocos
+        self.bloqueia = False
         pygame.sprite.Sprite.__init__(self)
         img = imgs['Casa'][index]
         img = pygame.transform.scale(img, (block_size[0]*blocos, block_size[1]*blocos))
@@ -58,7 +62,7 @@ class Portal(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.tipo = 'portal'
+        self.tipo = 'decorativo'
         self.destino = 0, 0
         self.coord_destino = 0, 0
 
