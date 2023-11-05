@@ -1,0 +1,1487 @@
+{
+  "inimigos": {
+    "1": {
+      "pos": [
+        2029,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "2": {
+      "pos": [
+        1708,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "3": {
+      "pos": [
+        2365,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "4": {
+      "pos": [
+        2551,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "5": {
+      "pos": [
+        2201,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "6": {
+      "pos": [
+        3427,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "7": {
+      "pos": [
+        3765,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "8": {
+      "pos": [
+        3351,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "9": {
+      "pos": [
+        3247,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "10": {
+      "pos": [
+        3253,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "11": {
+      "pos": [
+        4135,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "12": {
+      "pos": [
+        4079,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "13": {
+      "pos": [
+        4430,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "14": {
+      "pos": [
+        3930,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "15": {
+      "pos": [
+        4067,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "16": {
+      "pos": [
+        4105,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "17": {
+      "pos": [
+        4159,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "18": {
+      "pos": [
+        4670,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "19": {
+      "pos": [
+        4722,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "20": {
+      "pos": [
+        4619,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "21": {
+      "pos": [
+        4760,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "22": {
+      "pos": [
+        4865,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "23": {
+      "pos": [
+        4424,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "24": {
+      "pos": [
+        4357,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "25": {
+      "pos": [
+        4575,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "26": {
+      "pos": [
+        4772,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "27": {
+      "pos": [
+        4788,
+        208
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "28": {
+      "pos": [
+        3225,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "29": {
+      "pos": [
+        4789,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "30": {
+      "pos": [
+        4674,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "31": {
+      "pos": [
+        5231,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "32": {
+      "pos": [
+        5366,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "33": {
+      "pos": [
+        5516,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "34": {
+      "pos": [
+        5151,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "35": {
+      "pos": [
+        5102,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "36": {
+      "pos": [
+        6325,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "37": {
+      "pos": [
+        6460,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "38": {
+      "pos": [
+        6046,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "39": {
+      "pos": [
+        6293,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "40": {
+      "pos": [
+        5854,
+        208
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "41": {
+      "pos": [
+        4159,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "42": {
+      "pos": [
+        4202,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "43": {
+      "pos": [
+        3716,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "44": {
+      "pos": [
+        4708,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "45": {
+      "pos": [
+        4622,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "46": {
+      "pos": [
+        4870,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "47": {
+      "pos": [
+        1210,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "48": {
+      "pos": [
+        987,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "49": {
+      "pos": [
+        1230,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "50": {
+      "pos": [
+        1007,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "51": {
+      "pos": [
+        1252,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "52": {
+      "pos": [
+        1725,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "53": {
+      "pos": [
+        1768,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "54": {
+      "pos": [
+        1849,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "55": {
+      "pos": [
+        1678,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "56": {
+      "pos": [
+        1684,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "57": {
+      "pos": [
+        2740,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "58": {
+      "pos": [
+        2651,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "59": {
+      "pos": [
+        2803,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "60": {
+      "pos": [
+        2746,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "61": {
+      "pos": [
+        2545,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "62": {
+      "pos": [
+        3410,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "63": {
+      "pos": [
+        3241,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "64": {
+      "pos": [
+        3472,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "65": {
+      "pos": [
+        3358,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "66": {
+      "pos": [
+        2995,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "67": {
+      "pos": [
+        3885,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "68": {
+      "pos": [
+        3909,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "69": {
+      "pos": [
+        4255,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "70": {
+      "pos": [
+        4046,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "71": {
+      "pos": [
+        4433,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "72": {
+      "pos": [
+        4621,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "73": {
+      "pos": [
+        4893,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "74": {
+      "pos": [
+        4959,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "75": {
+      "pos": [
+        4795,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "76": {
+      "pos": [
+        4683,
+        -48
+      ],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "77": {
+      "pos": [
+        5297,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "78": {
+      "pos": [
+        5659,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "79": {
+      "pos": [
+        5879,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "80": {
+      "pos": [
+        5951,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "81": {
+      "pos": [
+        6309,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "82": {
+      "pos": [
+        6955,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "83": {
+      "pos": [
+        6973,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "84": {
+      "pos": [
+        6712,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "85": {
+      "pos": [
+        6447,
+        136
+      ],
+      "tipo": "Goblin",
+      "quantidade": 1
+    },
+    "86": {
+      "pos": [
+        312,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "87": {
+      "pos": [
+        -42,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "88": {
+      "pos": [
+        84,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "89": {
+      "pos": [
+        2366,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "90": {
+      "pos": [
+        836,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "91": {
+      "pos": [
+        684,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "92": {
+      "pos": [
+        2929,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "93": {
+      "pos": [
+        1272,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "94": {
+      "pos": [
+        1830,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "95": {
+      "pos": [
+        2587,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "96": {
+      "pos": [
+        2347,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "97": {
+      "pos": [
+        2433,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "98": {
+      "pos": [
+        4205,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "99": {
+      "pos": [
+        3110,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "100": {
+      "pos": [
+        3019,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "101": {
+      "pos": [
+        4031,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "102": {
+      "pos": [
+        4864,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "103": {
+      "pos": [
+        4809,
+        -495
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "104": {
+      "pos": [
+        331,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "105": {
+      "pos": [
+        1601,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "106": {
+      "pos": [
+        101,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "107": {
+      "pos": [
+        134,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "108": {
+      "pos": [
+        1582,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "109": {
+      "pos": [
+        803,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "110": {
+      "pos": [
+        2137,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "111": {
+      "pos": [
+        717,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "112": {
+      "pos": [
+        2003,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "113": {
+      "pos": [
+        734,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "114": {
+      "pos": [
+        1749,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "115": {
+      "pos": [
+        1879,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "116": {
+      "pos": [
+        2843,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "117": {
+      "pos": [
+        1651,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "118": {
+      "pos": [
+        2849,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "119": {
+      "pos": [
+        2019,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "120": {
+      "pos": [
+        2537,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "121": {
+      "pos": [
+        2107,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "122": {
+      "pos": [
+        2493,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "123": {
+      "pos": [
+        2367,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "124": {
+      "pos": [
+        2871,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "125": {
+      "pos": [
+        2635,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "126": {
+      "pos": [
+        2769,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "127": {
+      "pos": [
+        2597,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "128": {
+      "pos": [
+        2796,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "129": {
+      "pos": [
+        4860,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "130": {
+      "pos": [
+        3811,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "131": {
+      "pos": [
+        5109,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "132": {
+      "pos": [
+        3871,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "133": {
+      "pos": [
+        3519,
+        -92
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "134": {
+      "pos": [
+        122,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "135": {
+      "pos": [
+        344,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "136": {
+      "pos": [
+        288,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "137": {
+      "pos": [
+        71,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "138": {
+      "pos": [
+        1484,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "139": {
+      "pos": [
+        1590,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "140": {
+      "pos": [
+        41,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "141": {
+      "pos": [
+        1206,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "142": {
+      "pos": [
+        2030,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "143": {
+      "pos": [
+        903,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "144": {
+      "pos": [
+        685,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "145": {
+      "pos": [
+        1158,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "146": {
+      "pos": [
+        851,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "147": {
+      "pos": [
+        760,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "148": {
+      "pos": [
+        1620,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "149": {
+      "pos": [
+        2922,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "150": {
+      "pos": [
+        1773,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "151": {
+      "pos": [
+        1345,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "152": {
+      "pos": [
+        2779,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "153": {
+      "pos": [
+        1694,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "154": {
+      "pos": [
+        1863,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "155": {
+      "pos": [
+        2431,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "156": {
+      "pos": [
+        2132,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "157": {
+      "pos": [
+        2073,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "158": {
+      "pos": [
+        3512,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "159": {
+      "pos": [
+        2448,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "160": {
+      "pos": [
+        1997,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "161": {
+      "pos": [
+        2470,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "162": {
+      "pos": [
+        3054,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "163": {
+      "pos": [
+        4253,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "164": {
+      "pos": [
+        2651,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "165": {
+      "pos": [
+        4071,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "166": {
+      "pos": [
+        3125,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "167": {
+      "pos": [
+        3259,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "168": {
+      "pos": [
+        4078,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "169": {
+      "pos": [
+        3706,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "170": {
+      "pos": [
+        4797,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "171": {
+      "pos": [
+        4789,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "172": {
+      "pos": [
+        2349,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "173": {
+      "pos": [
+        3677,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "174": {
+      "pos": [
+        3730,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "175": {
+      "pos": [
+        3683,
+        -222
+      ],
+      "tipo": "Cogumelo",
+      "quantidade": 1
+    },
+    "176": {
+      "pos": [
+        53,
+        -716
+      ],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "177": {
+      "pos": [
+        1045,
+        -716
+      ],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "178": {
+      "pos": [
+        1573,
+        -716
+      ],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "179": {
+      "pos": [
+        2094,
+        -716
+      ],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "180": {
+      "pos": [
+        2846,
+        -716
+      ],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "181": {
+      "pos": [
+        776,
+        56
+      ],
+      "tipo": "Lobo",
+      "quantidade": 1
+    },
+    "182": {
+      "pos": [
+        7104,
+        -64
+      ],
+      "tipo": "Boss1",
+      "quantidade": 1,
+      "boss": true
+    },
+    "183": {
+      "pos": [
+        4288,
+        -2304
+      ],
+      "tipo": "Boss2",
+      "quantidade": 1,
+      "boss": true
+    },
+    "184": {
+      "pos": [
+        -4936,
+        -136
+      ],
+      "tipo": "Boss3",
+      "quantidade": 1,
+      "boss": true
+    },
+    "185": {
+      "pos": [
+        304,
+        176
+      ],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    }
+  }
+}

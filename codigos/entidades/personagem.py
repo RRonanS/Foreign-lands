@@ -48,7 +48,7 @@ class Personagem(pygame.sprite.Sprite):
         self.vida_max, self.vida = 10, 10
         self.dano = 5
         self.animar_freq = self.animar_freq_backup = 0.30 * (30/fps)
-        self.coins, self.pontos, self.sorte, self.exp = 0, 0, 0, 0
+        self.coins, self.pontos, self.sorte, self.exp, self.inteligencia = 0, 0, 0, 0, 0
         self.buffs = {}
         self.curando = False
         self.cura_vel = 0

@@ -1,0 +1,15 @@
+{
+  "inimigos": {
+    "1": {
+      "pos":[300, 300],
+      "tipo": "Esqueleto",
+      "quantidade": 1
+    },
+    "2": {
+      "pos": [300, 270],
+      "tipo": "Boss1",
+      "quantidade": 1,
+      "boss": true
+    }
+  }
+}

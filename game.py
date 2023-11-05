@@ -382,9 +382,9 @@ def run():
                     personagem.desbloqueio.append(inimigo.lock)
                     for x in inimigo.unlocks:
                         personagem.acesso.append(x)
-                personagem.exp += inimigo.exp
+                personagem.exp += inimigo.exp * (1 + personagem.inteligencia/100)
                 inimigo.kill()
-                for drop in inimigo.drop():
+                for drop in inimigo.drop(sorte=personagem.sorte):
                     lista_sprites.add(drop)
                     sprites_draw.add(drop)
                     sprites_update.add(drop)
@@ -421,6 +421,8 @@ def run():
                 personagem.curando = False
                 spell.kill()
 
+        cenarios[cenario].aplicar_efeitos(personagem)
+
         if personagem.is_dead():
             dead(personagem, tela, tl)
         level(personagem)
@@ -443,4 +445,4 @@ def run():
     if console:
         linha_comandos.end()
         thread_comandos.join(timeout=1)
-    # pygame.quit()  # Remover na versão release
+    pygame.quit()  # Remover na versão release

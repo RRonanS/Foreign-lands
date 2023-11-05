@@ -1,11 +1,8 @@
-# Este arquivo possui os construtores para todos monstros usados no jogo e funções
-# para gerar monstros pelo mapa
+# Este arquivo possui os construtores para todos monstros usados no jogo
 import pygame.sprite
-
 from .projetil import Projetil
 from ..variaveis import screen_size, exp_mult, fps
 from random import randint, random
-from ..mapa.decorativo import Coin
 from codigos.entidades.gerenciador_imagens import imagens as imagens_todas
 import codigos.itens.itens as itens
 from codigos.ambiente.sons import monstros_sounds
@@ -36,22 +33,30 @@ class Monstro(pygame.sprite.Sprite):
         self.droprate = {'Pocao_vida': 0.01}
         self.sounds = {}
 
-    def drop(self):
+    def drop(self, sorte=0):
         """Gera os drops referentes a tal inimigo"""
+        from ..mapa.decorativo import Coin
         moeda = Coin()
-        val = randint(self.coin_drop[0], self.coin_drop[1])
+        val = randint(self.coin_drop[0], int(self.coin_drop[1]*(1 + (sorte/50))))
         moeda.value = val
         x, y = self.rect.centerx, self.rect.centery
         moeda.rect.centerx, moeda.rect.centery = x, y
         drops = [moeda]
         for key in self.droprate:
             # Drop de itens
-            if self.droprate[key] > random():
+            if self.droprate[key] + sorte/100 > random():
                 classe = getattr(itens, key)
                 obj = classe()
                 obj.as_drop()
                 obj.rect.centerx, obj.rect.centery = x, y
                 drops.append(obj)
+                if self.droprate[key] + sorte/100 > 1 and self.droprate[key] > random():
+                    # Chance de dropar um segundo item
+                    classe = getattr(itens, key)
+                    obj = classe()
+                    obj.as_drop()
+                    obj.rect.centerx, obj.rect.centery = x, y
+                    drops.append(obj)
         return drops
 
     def play_sound(self, sound):
@@ -402,7 +407,15 @@ class Shooter(Esqueleto):
             projetil = self.gerar_projetil(self.dir)
             if projetil is not None:
                 projetil.rect.center = self.rect.center
-                self.groups()[0].add(projetil)
+                grupo = None
+                for gp in self.groups():
+                    # Busca o menor grupo(tecnicamente o grupo que está em update)
+                    if grupo is None:
+                        grupo = gp
+                    else:
+                        if len(gp) < len(grupo):
+                            grupo = gp
+                grupo.add(projetil)
 
     def gerar_projetil(self, dir):
         """Retorna uma instancia do projetil da classe"""

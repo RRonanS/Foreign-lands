@@ -23,9 +23,10 @@ update_range = (screen_size[0], screen_size[1])  # Distancia de atualizacao dos 
 draw_range = (screen_size[0], screen_size[1])  # Distancia de visao dos inimigos
 
 # O quanto acrescenta ao por ponto em tal skill
-acrescimos = {'vida': 5, 'dano': 2, 'velocidade': 2 * (30 / fps), 'sorte': 5}
+acrescimos = {'vida': 5, 'dano': 2, 'velocidade': 2 * (30 / fps), 'sorte': 5, 'inteligencia': 10}
 
 cenarios_arq = 'dados/cenarios_data.json'
+monstros_arq = 'dados/monstros_data.json'
 
 idioma = 'portugues'
 versao = 0.21
@@ -35,7 +36,7 @@ update = '23/10/2023'
 
 def load_config():
     """Carrega dados do arquivo configuração"""
-    global idioma, efeitos, musica, volume, load, fps, console, cenarios_arq
+    global idioma, efeitos, musica, volume, load, fps, console, cenarios_arq, monstros_arq
     try:
         with open('dados/configuracao.json', 'r') as arq:
             data = json.load(arq)
@@ -64,6 +65,8 @@ def load_config():
                 load = False
             if data['cenario_load']:
                 cenarios_arq = data['cenario_load']
+            if data['monstros_load']:
+                monstros_arq = data['monstros_load']
     except:
         print('[Erro] Arquivo configuracao.json não encontrado na pasta dados')
 
