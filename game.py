@@ -94,7 +94,7 @@ def inicializar():
 
 
 tela = pygame.display.set_mode(size)
-pygame.display.set_caption('RPG Pygame')
+pygame.display.set_caption('Foreign Lands')
 relogio = pygame.time.Clock()
 
 
@@ -154,6 +154,7 @@ def run():
         t2 = Thread(target=chao_sprite.draw, args=[tela])
         t2.start()
         sprites_menu = grupo_menu(personagem, tamanho_barra_itens)
+        MOUSE_POS = pygame.mouse.get_pos()
         for event in pygame.event.get():
             # Recebe os eventos da tela
             if event.type == QUIT:
@@ -233,6 +234,14 @@ def run():
                 if not clicou:
                     if event.button == 1:
                         personagem.attack()
+        for sprite in sprites_menu:
+            # Mostra tooltip(informações) de um item quando o mouse estiver acima dele
+            if sprite.rect.collidepoint(MOUSE_POS[0], MOUSE_POS[1]):
+                tooltip = sprite.get_tooltip()
+                if tooltip is not None:
+                    tela.blit(tooltip, (sprite.rect.topleft[0],
+                                        sprite.rect.topleft[1] - tooltip.get_height())
+                              )
 
         for x in pygame.sprite.spritecollide(personagem, sprites_draw, False):
             # Verifica se alguma entidade bloqueia movimento do personagem

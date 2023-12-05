@@ -1,6 +1,6 @@
 # Módulo para armazenar as classes dos itens adicionados ao jogo
 import pygame.sprite
-from codigos.ambiente.textuais import fonte1, amarelo
+from codigos.ambiente.textuais import fonte1, amarelo, preto, fonte0
 
 dir = 'arquivos/imagens/itens/'
 imagens = {
@@ -26,6 +26,7 @@ class Item(pygame.sprite.Sprite):
         self.quantidade = 1
         self.tipo = ''
         self.nome = ''
+        self.tool = 'Esse é um Item'
         if sprite:
             self.create_sprite(icon)
 
@@ -54,6 +55,11 @@ class Item(pygame.sprite.Sprite):
         except:
             raise ValueError('Problema ao criar icone de item:', self)
 
+    def get_tooltip(self):
+        """Retorna um objeto de texto com a tooltip do item"""
+        texto = fonte0.render(self.tool, True, preto)
+        return texto
+
 
 class Pocao(Item):
     """Classe genérica para um item poção, ou seja pode ser consumido em troca de determinado efeito"""
@@ -65,6 +71,7 @@ class Pocao(Item):
         self.tipo = 'pocao'
         self.bonus = 0
         self.timer = None
+        self.tool = 'Esta é uma poção'
 
     def usar(self, personagem):
         """Override do metodo usar"""
@@ -95,6 +102,9 @@ class Pocao_vida(Pocao):
         self.valor = 15
         self.classe = 'Pocao_vida'
         self.create_sprite(self.img)
+
+    def get_tooltip(self):
+        return fonte0.render(f'Cura {self.bonus} de vida', True, preto)
 
 
 class Pocao_vidaGrande(Pocao_vida):
@@ -136,6 +146,7 @@ class Pocao_velocidade(Pocao):
         self.img_sg = diretorios['velocidade']
         self.img = imagens['velocidade']
         self.create_sprite(self.img)
+        self.tool = 'Aumenta a velocidade temporariamente'
 
 
 class Pocao_dano(Pocao):
@@ -149,6 +160,7 @@ class Pocao_dano(Pocao):
         self.img_sg = diretorios['dano']
         self.img = imagens['dano']
         self.create_sprite(self.img)
+        self.tool = 'Aumenta o dano temporariamente'
 
 
 class Pocao_regen(Pocao):
@@ -162,3 +174,4 @@ class Pocao_regen(Pocao):
         self.img_sg = diretorios['regen']
         self.img = imagens['regen']
         self.create_sprite(self.img)
+        self.tool = 'Lentamente regenera a vida'
