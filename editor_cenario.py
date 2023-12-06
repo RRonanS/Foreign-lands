@@ -240,7 +240,7 @@ def run():
         t_salvar.join()
     menu.join()
     # l_cmd.join(timeout=1000)
-    pygame.quit()  # Remover na release
+    # pygame.quit()  # Remover na release
     return 0
 
 
