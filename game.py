@@ -454,4 +454,4 @@ def run():
     if console:
         linha_comandos.end()
         thread_comandos.join(timeout=1)
-    pygame.quit()  # Remover na versão release
+    # pygame.quit()  # Remover na versão release
