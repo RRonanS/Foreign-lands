@@ -1,14 +1,16 @@
 import random
-
+import sys
 import pygame.mask
 from .monstros import Esqueleto, Executor
-from ..variaveis import char_size, exp_mult, screen_size, fps
+from ..outros.armazenamento import ler_inimigos
+from ..variaveis import exp_mult, screen_size, fps
 from random import randint
 from codigos.entidades.gerenciador_imagens import imagens
 from codigos.ambiente.sons import monstros_sounds
 
 imagens = imagens['bosses']
 sounds = monstros_sounds
+thismodule = sys.modules[__name__]
 
 width, height = screen_size
 
@@ -159,27 +161,17 @@ class Boss3(Esqueleto):
 
 
 def boss_group(lis, ini, grupo):
-    """Recebe a lista de sprites, a lista de inimigos e gera os bosses do jogo"""
-    boss1 = Boss1()
-    boss1.rect.centerx = int(width*9.5)
-    boss1.rect.centery = height//2
-
-    boss2 = Boss2()
-    boss2.rect.centerx = int(width*5.5)
-    boss2.rect.centery = -height*4.5
-
-    boss3 = Boss3()
-    boss3.rect.centerx = int(-1*width*7.5)
-    boss3.rect.centery = height//2
-
-    grupo.add(boss1)
-    lis.add(boss1)
-    ini.add(boss1)
-
-    grupo.add(boss2)
-    lis.add(boss2)
-    ini.add(boss2)
-
-    grupo.add(boss3)
-    lis.add(boss3)
-    ini.add(boss3)
+    """Recebe a lista de sprites, a lista de inimigos e as preenche com os bosses lidos
+    no arquivo inimigos"""
+    bosses = ler_inimigos(boss=True)
+    for key in bosses:
+        for item in bosses[key]:
+            classe = getattr(thismodule, key)
+            if classe is not None:
+                obj = classe()
+                pos = (item[0][0] * width) + item[1][0], (item[0][1] * height) + item[1][1]
+                obj.rect.centerx = pos[0]
+                obj.rect.centery = pos[1]
+                grupo.add(obj)
+                lis.add(obj)
+                ini.add(obj)

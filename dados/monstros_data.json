@@ -1,0 +1,267 @@
+{
+  "inimigos": {
+    "1": {
+      "pos": [1230, 111],
+      "tipo": "Esqueleto",
+      "quantidade": 2
+    },
+    "2": {
+      "pos": [1760, 352],
+      "tipo": "Esqueleto",
+      "quantidade": 3
+    },
+    "3": {
+      "pos": [2464, 352],
+      "tipo": "Esqueleto",
+      "quantidade": 5
+    },
+    "4": {
+      "pos": [3168, 352],
+      "tipo": "Esqueleto",
+      "quantidade": 7
+    },
+    "5": {
+      "pos": [3872, 352],
+      "tipo": "Esqueleto",
+      "quantidade": 10
+    },
+    "6": {
+      "pos": [2464, 352],
+      "tipo": "Olho",
+      "quantidade": 1
+    },
+    "7": {
+      "pos": [3872, 352],
+      "tipo": "Olho",
+      "quantidade": 2
+    },
+    "8": {
+      "pos": [4576, 352],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "9": {
+      "pos": [5280, 352],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "10": {
+      "pos": [3168, -96],
+      "tipo": "Olho",
+      "quantidade": 3
+    },
+    "11": {
+      "pos": [3872, -96],
+      "tipo": "Olho",
+      "quantidade": 3
+    },
+    "12": {
+      "pos": [352, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "13": {
+      "pos": [1056, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "14": {
+      "pos": [1760, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "15": {
+      "pos": [2464, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "16": {
+      "pos": [3168, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "17": {
+      "pos": [3872, -544],
+      "tipo": "Olho",
+      "quantidade": 5
+    },
+    "18": {
+      "pos": [4576, 352],
+      "tipo": "Goblin",
+      "quantidade": 2
+    },
+    "19": {
+      "pos": [5280, 352],
+      "tipo": "Goblin",
+      "quantidade": 3
+    },
+    "20": {
+      "pos": [5984, 352],
+      "tipo": "Goblin",
+      "quantidade": 4
+    },
+    "21": {
+      "pos": [204, -94],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "22": {
+      "pos": [999, -176],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "23": {
+      "pos": [1482, -401],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "24": {
+      "pos": [2174, -288],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "25": {
+      "pos": [3274, -143],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "26": {
+      "pos": [4118, -268],
+      "tipo": "Cogumelo",
+      "quantidade": 3
+    },
+    "27": {
+      "pos": [315, -706],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "28": {
+      "pos": [860, -831],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "29": {
+      "pos": [1906, -798],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "30": {
+      "pos": [2588, -496],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "31": {
+      "pos": [3211, -873],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "32": {
+      "pos": [4089, -693],
+      "tipo": "Cogumelo",
+      "quantidade": 5
+    },
+    "33": {
+      "pos": [365, -991],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "34": {
+      "pos": [1061, -1270],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "35": {
+      "pos": [1931, -985],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "36": {
+      "pos": [2707, -968],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "37": {
+      "pos": [3474, -1137],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "38": {
+      "pos": [3918, -946],
+      "tipo": "Cogumelo",
+      "quantidade": 7
+    },
+    "39": {
+      "pos": [102, -2047],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "40": {
+      "pos": [820, -1892],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "41": {
+      "pos": [1629, -1815],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "42": {
+      "pos": [2444, -1947],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "43": {
+      "pos": [3100, -2239],
+      "tipo": "BringerDeath",
+      "quantidade": 1
+    },
+    "44": {
+      "pos": [-352, 224],
+      "tipo": "Lobo",
+      "quantidade": 3
+    },
+    "45": {
+      "pos": [-352, -224],
+      "tipo": "Lobo",
+      "quantidade": 3
+    },
+    "46": {
+      "pos": [-352, 672],
+      "tipo": "Lobo",
+      "quantidade": 3
+    },
+    "47": {
+      "pos": [-1944, 420],
+      "tipo": "Golem",
+      "quantidade": 2
+    },
+    "48": {
+      "pos": [-1523, 669],
+      "tipo": "Golem",
+      "quantidade": 2
+    },
+    "49": {
+      "pos": [-1466, -91],
+      "tipo": "Golem",
+      "quantidade": 2
+    },
+    "50": {
+      "pos": [6688, 224],
+      "tipo": "Boss1",
+      "quantidade": 1,
+      "boss": true
+    },
+    "51": {
+      "pos": [3872, -2016],
+      "tipo": "Boss2",
+      "quantidade": 1,
+      "boss": true
+    },
+    "52": {
+      "pos": [-5280, 224],
+      "tipo": "Boss3",
+      "quantidade": 1,
+      "boss": true
+    }
+  }
+}

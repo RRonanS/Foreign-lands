@@ -1,7 +1,8 @@
 # Este arquivo possui os construtores de objetos para o chão do jogo
+from collections import defaultdict
 import pygame.sprite
 from json import load
-from codigos.variaveis import screen_size, block_size, char_size
+from codigos.variaveis import screen_size, block_size, char_size, fps
 import codigos.mapa.decorativo as decorativo
 
 width, height = screen_size
@@ -107,6 +108,7 @@ class Chao:
         self.posicoes = {}
         self.copia = False
         self.fonte = '0 0'
+        self.efeitos = defaultdict(list)
         finais = fonte['final']
         self.finais = finais
         excludex = []
@@ -137,20 +139,36 @@ class Chao:
                         bloco = Bloco((x*block_size[0], y*block_size[1]), b_id)
                         if source[linha][coluna]['flip']:
                             bloco.flip()
-                        self.posicoes[(y, x)] = True
+                        if 'walkable' in source[linha][coluna]:
+                            bloco.walkable = source[linha][coluna]['walkable']
+                        if 'damage' in source[linha][coluna]:
+                            val = int(source[linha][coluna]['damage'])
+                            if val > 0:
+                                bloco.damage = True, val
+                        if 'slower' in source[linha][coluna]:
+                            val = int(source[linha][coluna]['slower'])
+                            if val > 0:
+                                bloco.slower = True, val
+                        if bloco.walkable:
+                            self.posicoes[(y, x)] = True
+                            if bloco.slower[0]:
+                                self.efeitos[(y, x)].append(('S', bloco.slower[1] / fps))
+                            if bloco.damage[0]:
+                                self.efeitos[(y, x)].append(('D', bloco.damage[1] / fps))
                         self.grupo.add(bloco)
-        decor = fonte['decoracoes']
-        for dec in decor:
-            class_ = getattr(decorativo, decor[dec]['classe'])
-            inst = class_(decor[dec]['index'], decor[dec]['blocos'])
-            a = decor[dec]['pos'].split()
-            x, y = int(a[0]), int(a[1])
-            inst.rect.topleft = x*block_size[0], y*block_size[1]
-            if 'bloqueia' in decor[dec]:
-                if decor[dec]['bloqueia']:
-                    inst.bloqueia = True
-                    self.bloqueios[(x*block_size[0], y*block_size[1])] = decor[dec]['blocos']
-            self.grupo.add(inst)
+        if 'decoracoes' in fonte:
+            decor = fonte['decoracoes']
+            for dec in decor:
+                class_ = getattr(decorativo, decor[dec]['classe'])
+                inst = class_(decor[dec]['index'], decor[dec]['blocos'])
+                a = decor[dec]['pos'].split()
+                x, y = int(a[0]), int(a[1])
+                inst.rect.topleft = x*block_size[0], y*block_size[1]
+                if 'bloqueia' in decor[dec]:
+                    if decor[dec]['bloqueia']:
+                        inst.bloqueia = True
+                        self.bloqueios[(x*block_size[0], y*block_size[1])] = decor[dec]['blocos']
+                self.grupo.add(inst)
 
     def tem_bloco(self, cords):
         """Dadas as coordenadas, converte para posição de bloco e retorna
@@ -159,6 +177,27 @@ class Chao:
         if ((y//block_size[1]), (x//block_size[0])) in self.posicoes:
             return True
         return False
+
+    def tem_efeito(self, cords):
+        """Verifica se nessas coordenadas há algum efeito a ser aplicado na entidade nela presente,
+        retorna uma lista dos efeitos presentes ou None"""
+        x, y = arredondar(cords)
+        if self.tem_bloco(cords):
+            if ((y // block_size[1]), (x // block_size[0])) in self.efeitos:
+                return self.efeitos[((y // block_size[1]), (x // block_size[0]))]
+        return None
+
+    def aplicar_efeitos(self, entidade):
+        """Aplica efeitos a uma entidade, caso haja efeito no bloco em questão"""
+        pos = entidade.rect.centerx, entidade.rect.centery
+        efeitos = self.tem_efeito(pos)
+        if efeitos is not None:
+            for efeito in efeitos:
+                if efeito[0] == 'D':
+                    entidade.vida -= efeito[1]
+                if efeito[0] == 'S':
+                    # Diminuir velocidade, depois retornar a original
+                    pass
 
     def tem_bloqueio(self, rect):
         """Verifica se alguma decoração bloqueia tal retangulo,

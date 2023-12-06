@@ -11,10 +11,12 @@ def level_up(char, tl):
                sg.Button('+', key='plus_health')],
               [sg.Text(tl('dano')), sg.Text('000', key='val_damage'),
                sg.Button('+', key='plus_damage')],
-              [sg.Text(tl('velocidade')), sg.Text('00', key='val_speed'),
+              [sg.Text(tl('velocidade')), sg.Text('00.00', key='val_speed'),
                sg.Button('+', key='plus_speed')],
               [sg.Text(tl('sorte')), sg.Text('0.0%', key='val_luck'),
-               sg.Button('+', key='plus_luck')]
+               sg.Button('+', key='plus_luck')],
+              [sg.Text(tl('inteligencia')), sg.Text('0.0%', key='val_int'),
+               sg.Button('+', key='plus_int')]
               ]
     tela = sg.Window(tl('personagem'), layout, size=(250, 250),
                      background_color='', element_justification='left')
@@ -25,12 +27,14 @@ def level_up(char, tl):
         tela.Element('val_damage').update(f'{char.dano}')
         tela.Element('val_speed').update(f'{char.vel}')
         tela.Element('val_luck').update(f'{char.sorte}%')
+        tela.Element('val_int').update(f'{char.inteligencia}%')
         evento, valores = tela.read()
         if evento is None:
             return None
         elif 'plus' in evento:
             if char.pontos > 0:
                 tipo = evento.replace('plus_', '')
+                undo = False
                 if tipo == 'health':
                     if char.vida == char.vida_max:
                         char.vida += acrescimos['vida']
@@ -38,10 +42,16 @@ def level_up(char, tl):
                 elif tipo == 'damage':
                     char.dano += acrescimos['dano']
                 elif tipo == 'speed':
-                    char.vel += acrescimos['velocidade']
+                    if char.vel < char.vel_max:
+                        char.vel += acrescimos['velocidade']
+                    else:
+                        undo = True
                 elif tipo == 'luck':
                     char.sorte += acrescimos['sorte']
-                char.pontos -= 1
+                elif tipo == 'int':
+                    char.inteligencia += acrescimos['inteligencia']
+                if not undo:
+                    char.pontos -= 1
 
 
 def mercado(char, merc, tl):

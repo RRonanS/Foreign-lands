@@ -1,10 +1,16 @@
 import json
 import codigos.entidades.monstros as monstros
-import codigos.entidades.bosses as bmod
 import codigos.entidades.npcs as npcmod
 import codigos.itens.itens as itensmod
+from codigos.variaveis import monstros_arq, screen_size
+from collections import defaultdict
+import jsbeautifier
 
 dir = 'dados/'
+W, H = screen_size
+options = jsbeautifier.default_options()
+options.indent_size = 2
+options.max_preserve_newlines = True
 
 
 def escrever(personagem, inimigos, npcs, cenario):
@@ -13,7 +19,8 @@ def escrever(personagem, inimigos, npcs, cenario):
     data = {
         "personagem": {
             "nivel": personagem.nivel,
-            "skills": [personagem.vida_max, personagem.dano, personagem.vel / (30/fps), personagem.sorte],
+            "skills": [personagem.vida_max, personagem.dano, personagem.vel / (30/fps),
+                       personagem.sorte, personagem.inteligencia],
             "vida": personagem.vida,
             "pontos": personagem.pontos,
             "coins": personagem.coins,
@@ -50,11 +57,12 @@ def escrever(personagem, inimigos, npcs, cenario):
         }
 
     with open(f'{dir}player_data.json', 'w') as json_file:
-        json.dump(data, json_file, indent=2)
+        json_file.write((jsbeautifier.beautify(json.dumps(data), options)))
 
 
 def ler(personagem, inimigos, npcs, bosses):
     """Lê os dados armazenados e carrega nos objetos, retorna False se nao leu"""
+    import codigos.entidades.bosses as bmod
     from codigos.variaveis import load, fps
     try:
         with open(f'{dir}player_data.json', 'r') as json_file:
@@ -69,6 +77,7 @@ def ler(personagem, inimigos, npcs, bosses):
         personagem.dano, personagem.vel = p['skills'][1], p['skills'][2] * (30/fps)
         personagem.sorte, personagem.vida = p['skills'][3], p['vida']
         personagem.pontos, personagem.coins = p['pontos'], p['coins']
+        personagem.inteligencia = p['skills'][4]
         personagem.exp = p['exp']
         personagem.acesso = [(i[0], i[1]) for i in p['acesso']]
         personagem.desbloqueio = [(i[0], i[1]) for i in p['desbloqueio']]
@@ -109,3 +118,37 @@ def ler(personagem, inimigos, npcs, bosses):
         return True, cenario
     else:
         return False, (0, 0)
+
+
+def ler_inimigos(boss=False):
+    """Lê o json com os inimigos e retorna um dicionario com chave classe e valores lista de pares
+    cenario-posição-quantidade, boss=True retorna apenas os inimigos que sejam bosses"""
+    resp = defaultdict(list)
+    try:
+        with open(monstros_arq, 'r') as arq:
+            data = json.load(arq)
+    except FileNotFoundError:
+        print('[Erro] arquivo', monstros_arq, 'inexistente')
+        from codigos.outros import write_gerador
+        return ler_inimigos(boss)
+    if 'inimigos' in data:
+        monstros = data['inimigos']
+        for i in monstros:
+            try:
+                a = monstros[i]
+                is_boss = False
+                if 'boss' in a:
+                    is_boss = a['boss']
+                if len(a['pos']) == 2 and ((boss and is_boss) or (not boss and not is_boss)):
+                    classe = a['tipo']
+                    cenario = a['pos'][0] // W, a['pos'][1] // H
+                    posicao = a['pos'][0] % W, a['pos'][1] % H
+                    qtd = a['quantidade']
+                    resp[classe].append([
+                        cenario,
+                        posicao,
+                        qtd
+                    ])
+            except:
+                print('[Erro] ao criar monstro', monstros[i])
+    return resp

@@ -54,7 +54,7 @@ def main_menu():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(int(0.0001 * (W * H))).render(tl("menu de jogo"), True, "#b68f40")
+        MENU_TEXT = get_font(int(0.0001 * (W * H))).render(tl("Foreign lands"), True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(W // 2, 0.13 * H))
 
         PLAY_BUTTON = Button(

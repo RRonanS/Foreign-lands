@@ -1,7 +1,8 @@
 # Este arquivo inclui as funções geradoras das entidades do jogo
-from .npcs import Mercador, Mago
+from .npcs import Mercador
 from ..itens.itens import Pocao_vida, Pocao_vidaGrande
-from ..variaveis import screen_size, char_size
+from ..outros.armazenamento import ler_inimigos
+from ..variaveis import screen_size
 from random import randint
 import sys
 width, height = screen_size
@@ -23,64 +24,10 @@ def get_npcs():
 
 
 def get_inimigos(inimigos):
-    """Função para gerar os inimigos do jogo"""
-    gerador = {'Esqueleto':
-                   [[(1, 0), (width // 2, height - char_size[1]), 2],
-                    [(2, 0), (width // 2, height - char_size[1]), 3],
-                    [(3, 0), (width // 2, height - char_size[1]), 5],
-                    [(4, 0), (width // 2, height - char_size[1]), 7],
-                    [(5, 0), (width // 2, height - char_size[1]), 10]],
-               'Olho':
-                   [[(3, 0), (width // 2, height - char_size[1]), 1],
-                    [(5, 0), (width // 2, height - char_size[1]), 2],
-                    [(6, 0), (width // 2, height - char_size[1]), 5],
-                    [(7, 0), (width // 2, height - char_size[1]), 5],
-                    [(4, -1), (width // 2, height - char_size[1]), 3],
-                    [(5, -1), (width // 2, height - char_size[1]), 3],
-                    [(0, -2), (width // 2, height - char_size[1]), 5],
-                    [(1, -2), (width // 2, height - char_size[1]), 5],
-                    [(2, -2), (width // 2, height - char_size[1]), 5],
-                    [(3, -2), (width // 2, height - char_size[1]), 5],
-                    [(4, -2), (width // 2, height - char_size[1]), 5],
-                    [(5, -2), (width // 2, height - char_size[1]), 5]
-                    ],
-               'Goblin':
-                   [[(6, 0), (width // 2, height - char_size[1]), 2],
-                    [(7, 0), (width // 2, height - char_size[1]), 3],
-                    [(8, 0), (width // 2, height - char_size[1]), 4]
-                    ],
-               'Cogumelo':
-                   [
-                    [(0, -1), (-1, -1), 3],
-                    [(1, -1), (-1, -1), 3],
-                    [(2, -1), (-1, -1), 3],
-                    [(3, -1), (-1, -1), 3],
-                    [(4, -1), (-1, -1), 3],
-                    [(5, -1), (-1, -1), 3],
-                    [(0, -2), (-1, -1), 5],
-                    [(1, -2), (-1, -1), 5],
-                    [(2, -2), (-1, -1), 5],
-                    [(3, -2), (-1, -1), 5],
-                    [(4, -2), (-1, -1), 5],
-                    [(5, -2), (-1, -1), 5],
-                    [(0, -3), (-1, -1), 7],
-                    [(1, -3), (-1, -1), 7],
-                    [(2, -3), (-1, -1), 7],
-                    [(3, -3), (-1, -1), 7],
-                    [(4, -3), (-1, -1), 7],
-                    [(5, -3), (-1, -1), 7],
-                   ],
-               'BringerDeath':
-               [
-                   [(0, -5), (-1, -1), 1],
-                   [(1, -5), (-1, -1), 1],
-                   [(2, -5), (-1, -1), 1],
-                   [(3, -5), (-1, -1), 1],
-                   [(4, -5), (-1, -1), 1],
-               ]
-               }
+    """Função para gerar os inimigos do jogo com base no json de inimigos lido"""
+    gerador = ler_inimigos(boss=False)
 
-    def aux(classe, cenario, pos=(-1, -1)):
+    def aux(classe, cenario, pos=(-1, -1), radomize=False):
         """Função auxiliar para cliar um inimigo de tal classe em determinado cenario"""
         inimigo = classe()
         cenario = cenario[0], cenario[1]
@@ -88,12 +35,18 @@ def get_inimigos(inimigos):
             inimigo.rect.centerx = randint(cenario[0] * width, (1 + cenario[0]) * width)
             inimigo.rect.centery = randint(cenario[1] * height, (1 + cenario[1]) * height)
         else:
-            r = randint(0, width // 2)
-            inimigo.rect.centerx, inimigo.rect.centery = (width * (1 + cenario[0]) - pos[0]) + r, (
-                        (1 + cenario[1]) * pos[1])
+            rx, ry = randint(int(0.1 * width), int(0.4 * width)), randint(int(0.1 * height), int(0.4 * height))
+            inimigo.rect.centerx, inimigo.rect.centery = (width * (1 + cenario[0]) - pos[0]), \
+                                                         (height * (1 + cenario[1]) - pos[1])
+            if radomize:
+                inimigo.rect.centerx += rx
+                inimigo.rect.centery += ry
         inimigos.add(inimigo)
 
     for key in gerador:
         for item in gerador[key]:
             for i in range(item[2]):
-                aux(getattr(monstros, key), item[0], item[1])
+                do_rand = False  # Evita que entidades spawnem coladas
+                if item[2] > 1:
+                    do_rand = True
+                aux(getattr(monstros, key), item[0], item[1], do_rand)
