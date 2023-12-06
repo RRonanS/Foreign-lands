@@ -587,6 +587,3 @@ def linha_comando_add():
                     print('[Falha] Classe não encontrada')
                 print('> ', end='')
                 comando = []
-
-
-run()
