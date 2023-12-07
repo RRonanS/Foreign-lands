@@ -1,13 +1,13 @@
 {
   "idioma": "portugues",
-  "load_save": false,
+  "load_save": true,
   "sons": {
-    "musica": false,
-    "efeitos": false,
+    "musica": true,
+    "efeitos": true,
     "volume": 1
   },
   "console": true,
   "fps": 30,
-  "cenario_load": "dados/cenario_dev.json",
+  "cenario_load": "dados/cenarios_data.json",
   "monstros_load": "dados/monstros_data.json"
 }
