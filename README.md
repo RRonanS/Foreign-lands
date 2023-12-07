@@ -6,6 +6,30 @@ Pasta com executáveis:
 
 https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sharing
 
+# Release 0.4 (06/12/2023)
+
+    - Correção de bugs no editor de cenários
+    
+    - Melhorias gráficas no editor de cenários
+    
+    - Implementação das flags de andável e dano dos blocos
+    
+    - Monstros salvos e carregados via json
+    
+    - Melhoria no sistema de distribuição dos monstros pelos cenarios
+    
+    - Correção de bug do projetil do golem
+    
+    - Limite de velocidade maxima do jogador
+    
+    - Melhoria dos drops para skill de sorte
+    
+    - Nova skill: inteligencia - Dá boost de xp
+    
+    - Tooltips(Informações) das poções
+    
+    - Versão inicial da parte esquerda do cenário(A finalizar nas próximas versões)
+
 # Release 0.3 (29/10/2023)
 
     - Sistema de edição de cenários
