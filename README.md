@@ -6,6 +6,10 @@ Pasta com executáveis:
 
 https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sharing
 
+Formulário de feedback:
+
+https://forms.gle/Kx1DYiNsCzHdkjMq8
+
 # Release 0.4 (06/12/2023)
 
     - Correção de bugs no editor de cenários
