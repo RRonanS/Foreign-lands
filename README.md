@@ -10,6 +10,20 @@ Formulário de feedback:
 
 https://forms.gle/Kx1DYiNsCzHdkjMq8
 
+# Release 0.5(Em trabalho)
+
+    - Correção de bugs de gameplay
+    
+    - Ajustes de cenários
+    
+    - Editor de cenários: seleção de múltiplos blocos com shift
+    
+    - Mudança da sprite e animações do mercador
+    
+    - 2 novos mercadores adicionados ao mapa
+    
+    - Complementando traduções de inglês
+
 # Release 0.4 (06/12/2023)
 
     - Correção de bugs no editor de cenários
