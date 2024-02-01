@@ -22,7 +22,7 @@ class Boss1(Esqueleto):
 
         self.tipo = 'boss'
         self.is_boss = True
-        self.lock = 9, 0  # Cenario do boss a bloquear saida do player
+        self.lock = 9, 0  # Cenario do boss a bloquear saida do player e do boss
         self.unlocks = []  # Cenarios a serem desbloqueados para acesso
         for x in range(5):  # Desbloqueia o canto superior direito do mapa
             for y in range(-5, 0):
