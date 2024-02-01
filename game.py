@@ -10,7 +10,7 @@ from codigos.entidades.bosses import boss_group
 from codigos.interfaces.menu import level_up, mercado
 from codigos.outros.auxiliares import level as le, dados as da, \
     boss_lbl as bl, health_bar as hb, info, update_grupos, update_to_draw, \
-    update_pos, grupo_menu, dead, alerta_level_up, deletar_save
+    update_pos, grupo_menu, dead, alerta_level_up, deletar_save, mudar_cenario
 from codigos.mapa.backgrounds import backgrounds
 from codigos.entidades.gerador import get_mercadores, get_npcs, get_inimigos
 from codigos.outros.armazenamento import ler, escrever
@@ -115,6 +115,7 @@ def health_bar(target): hb(target, tela)
 
 t.join()
 cenario = 0, 0
+cenarios_seguros = [(0, 0)]  # Bloqueia a atualização de monstros
 
 tradutor = Tradutor()
 def tl(frase):
@@ -199,7 +200,7 @@ def run():
                                 mercado(personagem, sprite, tl)
                                 if efeitos:
                                     mercador_saudar.play()
-                            break
+                                break
                 if pygame.key.get_pressed()[K_ESCAPE]:
                     is_run = False
             elif event.type == KEYUP:
@@ -266,32 +267,13 @@ def run():
         if dir[0] != -1:
             # Movimentação do personagem
             mudanca = personagem.mover(dir, cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio)
-            if (mudanca is not None) and ((not cenarios[cenario].lock) or cenario in personagem.desbloqueio):
-                # Tenta mudar de cenário
-                target = None
-                if mudanca[0] == 0:
-                    if (cenario[0] + mudanca[1], cenario[1]) in cenarios:
-                        if cenarios[(cenario[0] + mudanca[1], cenario[1])].acesso or (cenario[0] + mudanca[1], cenario[1]) \
-                                in personagem.acesso:
-                            target = 'centerx', width * (-1 * mudanca[1])
-                            cenario = (cenario[0] + mudanca[1], cenario[1])
-                            if mudanca[1] > 0:
-                                personagem.rect.bottomleft = 0, personagem.rect.bottomleft[1]
-                            else:
-                                personagem.rect.topright = width, personagem.rect.topright[1]
-                elif mudanca[0] == 1:
-                    if (cenario[0], cenario[1] + mudanca[1]) in cenarios:
-                        if cenarios[(cenario[0], cenario[1] + mudanca[1])].acesso or (cenario[0], cenario[1] + mudanca[1]) \
-                                in personagem.acesso:
-                            target = 'centery', height * (-1 * mudanca[1])
-                            cenario = (cenario[0], cenario[1] + mudanca[1])
-                            if mudanca[1] > 0:
-                                personagem.rect.bottomleft = personagem.rect.bottomleft[0], 96
-                            else:
-                                personagem.rect.bottomleft = personagem.rect.bottomleft[0], height - 1
+
+            targets, cenario = mudar_cenario(mudanca, cenario, cenarios, personagem)
+            # Dada a validação do movimento, muda de cenário e atualiza as posições
+            if targets is not None:
                 chao_sprite = cenarios[cenario].grupo
                 # Atualização das posições das entidades
-                t4 = Thread(target=update_pos, args=[target, inimigos, drops, npcs])
+                t4 = Thread(target=update_pos, args=[targets, inimigos, drops, npcs])
                 t4.start()
                 # Atualização dos grupos update e draw
                 t3 = Thread(target=update_grupos, args=[personagem, lista_sprites, sprites_update, sprites_draw, t4])
@@ -314,8 +296,8 @@ def run():
                 if pygame.sprite.collide_mask(sprite, personagem):
                     sprite.colidiu(personagem)
 
-        t4 = Thread(target=update_to_draw, args=[personagem.rect, sprites_update, sprites_draw])
-        t4.start()
+        t5 = Thread(target=update_to_draw, args=[personagem.rect, sprites_update, sprites_draw])
+        t5.start()
 
         # Joga as sprites do buffer de comandos para as listas de uso
         for x in sprites_buffer:
@@ -381,7 +363,8 @@ def run():
                 inimigo.rand_walk()
 
             # Movimentação do inimigo
-            inimigo.mover(cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio, sprites_update.sprites())
+            if cenario not in cenarios_seguros:
+                inimigo.mover(cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio, sprites_update.sprites())
 
             # Morte do inimigo
             if inimigo.dead:
@@ -431,6 +414,7 @@ def run():
                 spell.kill()
 
         cenarios[cenario].aplicar_efeitos(personagem)
+        t5.join()
 
         if personagem.is_dead():
             dead(personagem, tela, tl)

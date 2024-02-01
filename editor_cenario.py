@@ -42,7 +42,7 @@ auto_save_delay = auto_save_atual = 600 * fps  # Delay para salvar automaticamen
 
 W, H = screen_size
 B_W, B_H = H // block_size[1], W // block_size[1]
-bloco_selecionado = None
+bloco_selecionado = []
 running = True
 do_up_bloco = do_up_cenario = False
 do_up_run = False
@@ -160,11 +160,22 @@ def run():
                 if pygame.mouse.get_pressed()[0]:
                     # Seleção de bloco
                     x, y = MOUSE_POS
-                    temp = bloco_selecionado
-                    bloco_selecionado = find_block(chao_sprite,
-                                                   (x // block_size[0], y // block_size[1]))
-                    if temp == bloco_selecionado:
-                        bloco_selecionado = None
+                    if pygame.key.get_pressed()[K_LSHIFT]:
+                        # Adiciona um bloco a lista
+                        bloco_novo = find_block(chao_sprite,
+                                                       (x // block_size[0], y // block_size[1]))
+                        if bloco_novo in bloco_selecionado:
+                            bloco_selecionado.remove(bloco_novo)
+                        else:
+                            bloco_selecionado.append(bloco_novo)
+                    else:
+                        # Seta a lista para apenas o bloco atual
+                        bloco_atual = find_block(chao_sprite,
+                                                       (x // block_size[0], y // block_size[1]))
+                        if len(bloco_selecionado) == 1 and bloco_selecionado[0] == bloco_atual:
+                            bloco_selecionado = []
+                        else:
+                            bloco_selecionado = [bloco_atual]
                     do_up_bloco = True
             if event.type == KEYDOWN:
                 # Teclas de mudança de cenário
@@ -233,7 +244,8 @@ def run():
 
             info(cenario, None, tela, fps, True)
             print_pos(tela, chao_sprite)
-            draw_selected_rect(bloco_selecionado, tela)
+            for bloco in bloco_selecionado:
+                draw_selected_rect(bloco, tela)
         pygame.display.flip()
 
     if t_salvar is not None:
@@ -343,24 +355,27 @@ def menu_select():
     tela = sg.Window('Menu', layout=[[layout]], background_color=BG, finalize=True)
 
     def update_bloco():
-        if bloco_selecionado is not None:
-            pos = bloco_selecionado.rect.topleft[0] // block_size[0], bloco_selecionado.rect.topleft[1] // block_size[1]
-            posicao = f'{pos[0]} {pos[1]}'
-            tela.Element('flip').update(value=bloco_selecionado.fliped)
-            tela.Element('andavel').update(value=bloco_selecionado.walkable)
-            tela.Element('dano').update(bloco_selecionado.damage[1])
-            tela.Element('lentidao').update(bloco_selecionado.slower[1])
-            tela.Element('bloco').update(bloco_selecionado.block_id)
-        else:
-            posicao = ''
-            tela.Element('flip').update(value=False)
-            tela.Element('andavel').update(value=False)
-            tela.Element('dano').update('0.0')
-            tela.Element('lentidao').update('0')
-            tela.Element('bloco').update('0')
-        tela.Element('posicao').update(posicao)
+        """Atualiza o front com base no back"""
+        for bloco in bloco_selecionado:
+            if bloco_selecionado is not None:
+                pos = bloco.rect.topleft[0] // block_size[0], bloco.rect.topleft[1] // block_size[1]
+                posicao = f'{pos[0]} {pos[1]}'
+                tela.Element('flip').update(value=bloco.fliped)
+                tela.Element('andavel').update(value=bloco.walkable)
+                tela.Element('dano').update(bloco.damage[1])
+                tela.Element('lentidao').update(bloco.slower[1])
+                tela.Element('bloco').update(bloco.block_id)
+            else:
+                posicao = ''
+                tela.Element('flip').update(value=False)
+                tela.Element('andavel').update(value=False)
+                tela.Element('dano').update('0.0')
+                tela.Element('lentidao').update('0')
+                tela.Element('bloco').update('0')
+            tela.Element('posicao').update(posicao)
 
     def update_cenario():
+        """Atualiza o front com base no back"""
         tela.Element('cenario').update(f'{cenario[0]} {cenario[1]}')
         tela.Element('lock').update(value=cenarios[tuple(cenario)].lock)
         tela.Element('acesso').update(value=cenarios[tuple(cenario)].acesso)
@@ -387,9 +402,8 @@ def menu_select():
             except:
                 pos = 0
                 erros.append('Posição inválida ou nula não modificada')
-            if len(pos) == 2:
+            for obj in bloco_selecionado:
                 # Altera os campos da posicao
-                obj = find_block(cenarios[tuple(cenario)].grupo, (pos[0], pos[1]))
                 if obj is not None:
                     obj.fliped = values['flip']
                     obj.walkable = values['andavel']
@@ -440,6 +454,8 @@ def menu_select():
                         if tupla in cenarios:
                             bloco_selecionado = find_block(cenarios[tuple(cenario)].grupo,
                                                            (tupla[0], tupla[1]))
+                            if bloco_selecionado is not None:
+                                bloco_selecionado = [bloco_selecionado]
                             do_up_bloco = True
                 except ValueError:
                     pass
@@ -452,7 +468,7 @@ def menu_select():
                             do_up_cenario = True
                             do_up_bloco = True
                             do_up_run = True
-                            bloco_selecionado = None
+                            bloco_selecionado = []
                 except ValueError:
                     pass
             elif event == 'salvar':
@@ -558,7 +574,7 @@ def get_user_input():
     comando = input("").split()
 
 
-def linha_comando_add():
+def linha_comando_add(): # Desatualizado
     """Linha de comando para adição de inimigos no json de inimigos"""
     import codigos.entidades.monstros as monstros
     import codigos.entidades.bosses as bosses
@@ -587,3 +603,5 @@ def linha_comando_add():
                     print('[Falha] Classe não encontrada')
                 print('> ', end='')
                 comando = []
+
+run()
