@@ -365,6 +365,7 @@ def run():
             # Movimentação do inimigo
             if cenario not in cenarios_seguros:
                 inimigo.mover(cenarios[cenario].tem_bloco, cenarios[cenario].tem_bloqueio, sprites_update.sprites())
+                cenarios[cenario].aplicar_efeitos(inimigo)
 
             # Morte do inimigo
             if inimigo.dead:

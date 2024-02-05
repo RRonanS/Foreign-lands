@@ -41,6 +41,7 @@ class Personagem(pygame.sprite.Sprite):
         self.inventario = []
         self.tipo = 'personagem'
         self.vel, self.vel_max = 7 * (30/fps), 15
+        self.vel_real = self.vel
         self.acesso = []
         self.desbloqueio = []
         self.pulo_altura = 50
@@ -52,6 +53,7 @@ class Personagem(pygame.sprite.Sprite):
         self.buffs = {}
         self.curando = False
         self.cura_vel = 0
+        self.slowed = False
 
         # Armazenamento das imagens do personagem
         self.images = images
@@ -285,3 +287,13 @@ class Personagem(pygame.sprite.Sprite):
         if self.sector == 'death':
             return True
         return False
+
+    def slow(self, percent):
+        """Diminui a velocidade da entidade, -1 reseta"""
+        if percent == -1 and self.slowed:
+            self.slowed = False
+            self.vel = self.vel_real
+        elif not self.slowed:
+            self.vel_real = self.vel
+            self.slowed = True
+            self.vel = (1-percent) * self.vel

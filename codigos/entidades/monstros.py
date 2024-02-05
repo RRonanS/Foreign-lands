@@ -29,6 +29,8 @@ class Monstro(pygame.sprite.Sprite):
         self.is_boss = False
         self.has_spell = False
         self.ataque_critico = False
+        self.vel_real = self.vel
+        self.slowed = False
         self.anim_mult = 0.3 * (30 / fps)
         self.droprate = {'Pocao_vida': 0.01}
         self.sounds = {}
@@ -65,6 +67,16 @@ class Monstro(pygame.sprite.Sprite):
         if sound in self.sounds and efeitos:
             self.sounds[sound].play()
         return
+
+    def slow(self, percent):
+        """Diminui a velocidade da entidade, -1 reseta"""
+        if percent == -1 and self.slowed:
+            self.slowed = False
+            self.vel = self.vel_real
+        elif not self.slowed:
+            self.vel_real = self.vel
+            self.slowed = True
+            self.vel = (1-percent) * self.vel
 
 
 class Esqueleto(Monstro):
@@ -471,7 +483,7 @@ class Lobo(Esqueleto):
         self.dano, self.vel, self.peso = 4, 3.5 * (30 / fps), 1
         self.visao = 0.3
         self.exp = 1000 * exp_mult
-        self.anim_mult = 0.25 * (30 / fps)
+        self.anim_mult = 0.15 * (30 / fps)
 
         self.images = imagens['lobo']
 
@@ -487,10 +499,9 @@ class Lobo(Esqueleto):
     def update_especifico2(self):
         """Muda a inversao"""
         if self.sector == 'walk':
-            if self.flip:
-                self.flip = False
-            else:
-                self.flip = True
+            self.flip = not self.flip
+        if self.dir[1] != 0 and self.dir[0] == 0:
+            self.flip = False
 
     def ataque_sprite(self):
         """Gera o sprite de deteccao de colisoes"""

@@ -1,33 +1,22 @@
 # Este arquivo possui os construtores de objetos para o chão do jogo
 from collections import defaultdict
 import pygame.sprite
-from json import load
 from codigos.variaveis import screen_size, block_size, char_size, fps
 import codigos.mapa.decorativo as decorativo
+from codigos.mapa.find_blocks import get_lista
 
 width, height = screen_size
 
 dir = 'arquivos/imagens/blocos/'
 dir_img = 'arquivos/imagens'
 
-# Conversão de id de bloco para nome da png
+# Lê os blocos da pasta arquivos/imagens/blocos/ e armazena suas imagens
 try:
-    with open(dir_img+'/tabela.json', 'r', encoding='UTF-8') as arq:
-        id_png = load(arq)['id_png']
-        id_png = {int(key): value for key, value in id_png.items()}
-except Exception as E:
-    # Carrega o padrão
-    print(f'[Erro] ao carregar o arquivo {dir_img}/tabela.png:', E)
-    id_png = {
-        1: 'terra1', 2: 'terra2', 3: 'terra3', 4: 'terra4', 5: 'terra5',
-        6: 'volcano1', 7: 'terra', 8: 'grama', 9: 'grama-passagem',
-        10: 'grama-intersec', 11: 'cogumelo1', 12: 'cogumelo2', 13: 'cogumelo3',
-        14: 'brick/brick1', 15: 'brick/brick2', 16: 'brick/brick3', 17: 'brick/brick4',
-        18: 'brick/brick5', 19: 'brick/brick6', 20: 'brick2/stone1', 21: 'brick2/stone2',
-        22: 'lavaf1', 23: 'lavaf2', 24: 'lavaf3', 25: 'lavaf4'
-    }
+    id_png = get_lista(dir)
+except:
+    raise Exception
 imgs = {
-    key: pygame.transform.scale(pygame.image.load(dir+f'{id_png[key]}.png'), block_size)
+    key: pygame.transform.scale(pygame.image.load(dir+f'{id_png[key]}_{key}.png'), block_size)
     for key in id_png
 }
 
@@ -55,7 +44,7 @@ class Bloco(pygame.sprite.Sprite):
 
     def flip(self):
         """Rotaciona o bloco em 90 graus"""
-        img = pygame.image.load(dir+f'{id_png[self.block_id]}.png')
+        img = pygame.image.load(dir+f'{id_png[self.block_id]}_{self.block_id}.png')
         img = pygame.transform.scale(img, block_size)
         img = pygame.transform.rotate(img, 90)
         self.image = img
@@ -152,7 +141,7 @@ class Chao:
                         if bloco.walkable:
                             self.posicoes[(y, x)] = True
                             if bloco.slower[0]:
-                                self.efeitos[(y, x)].append(('S', bloco.slower[1] / fps))
+                                self.efeitos[(y, x)].append(('S', bloco.slower[1]))
                             if bloco.damage[0]:
                                 self.efeitos[(y, x)].append(('D', bloco.damage[1] / fps))
                         self.grupo.add(bloco)
@@ -194,10 +183,15 @@ class Chao:
         if efeitos is not None:
             for efeito in efeitos:
                 if efeito[0] == 'D':
+                    # Efeito dano
                     entidade.vida -= efeito[1]
                 if efeito[0] == 'S':
-                    # Diminuir velocidade, depois retornar a original
-                    pass
+                    # Efeito slow
+                    if hasattr(entidade, 'slow'):
+                        entidade.slow(efeito[1]/100)
+        else:
+            if entidade.slowed:
+                entidade.slow(-1)
 
     def tem_bloqueio(self, rect):
         """Verifica se alguma decoração bloqueia tal retangulo,

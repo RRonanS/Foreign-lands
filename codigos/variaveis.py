@@ -10,7 +10,7 @@ dificuldade = 1
 exp_mult = 1
 exigencia_niveis = 0.7  # Define a taxa de aumento do custo de xp para subir de nivel
 musica, efeitos, volume = False, False, 0.0
-imortal = False
+imortal = True
 colide = True  # Se o personagem colide com entidades
 colide_tolerancia = 32
 info = True
@@ -29,7 +29,7 @@ cenarios_arq = 'dados/cenarios_data.json'
 monstros_arq = 'dados/monstros_data.json'
 
 idioma = 'portugues'
-versao = 0.21
+versao = 0.41
 devs = ['RRonan']
 update = '23/10/2023'
 
