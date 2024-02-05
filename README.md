@@ -24,6 +24,12 @@ https://forms.gle/Kx1DYiNsCzHdkjMq8
     
     - Complementando traduções de inglês
 
+    - Detecção automática de blocos na pasta arquivos/imagens/blocos (Formato; {nome_id})
+        
+    - Implementado funcionamento de slow em blocos
+    
+    - Correção do bug da animação do lobo ao descer
+
 # Release 0.4 (06/12/2023)
 
     - Correção de bugs no editor de cenários
