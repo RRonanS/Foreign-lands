@@ -29,9 +29,15 @@ class Monstro(pygame.sprite.Sprite):
         self.is_boss = False
         self.has_spell = False
         self.ataque_critico = False
+        self.vel_real = self.vel
+        self.slowed = False
         self.anim_mult = 0.3 * (30 / fps)
         self.droprate = {'Pocao_vida': 0.01}
         self.sounds = {}
+
+    def on_death(self):
+        """Método executado quando o monstro morrer"""
+        pass
 
     def drop(self, sorte=0):
         """Gera os drops referentes a tal inimigo"""
@@ -65,6 +71,16 @@ class Monstro(pygame.sprite.Sprite):
         if sound in self.sounds and efeitos:
             self.sounds[sound].play()
         return
+
+    def slow(self, percent):
+        """Diminui a velocidade da entidade, -1 reseta"""
+        if percent == -1 and self.slowed:
+            self.slowed = False
+            self.vel = self.vel_real
+        elif not self.slowed:
+            self.vel_real = self.vel
+            self.slowed = True
+            self.vel = (1-percent) * self.vel
 
 
 class Esqueleto(Monstro):
@@ -194,7 +210,7 @@ class Esqueleto(Monstro):
                 self.rect.centerx += self.vel * sinal
                 # Verifica se a posição nova é válida
                 if not self.voa:
-                    if not (ver_func(self.rect.center)) or ver_func2(self.rect):
+                    if (not (ver_func(self.rect.center))) or ver_func2(self.rect):
                         self.rect.centerx -= self.vel*sinal
 
             if self.dir[1] != 0:
@@ -205,7 +221,7 @@ class Esqueleto(Monstro):
                 self.rect.centery += self.vel * sinal
                 # Verifica se a nova posição é válida
                 if not self.voa:
-                    if not (ver_func(self.rect.center)) or ver_func2(self.rect):
+                    if (not (ver_func(self.rect.center))) or ver_func2(self.rect):
                         self.rect.centery -= self.vel*sinal
             # Arredondamento do restante do movimento
             if abs(self.dir[0]) < self.vel:
@@ -471,7 +487,7 @@ class Lobo(Esqueleto):
         self.dano, self.vel, self.peso = 4, 3.5 * (30 / fps), 1
         self.visao = 0.3
         self.exp = 1000 * exp_mult
-        self.anim_mult = 0.25 * (30 / fps)
+        self.anim_mult = 0.15 * (30 / fps)
 
         self.images = imagens['lobo']
 
@@ -480,6 +496,7 @@ class Lobo(Esqueleto):
 
         self.rect.width -= 8  # Ajustes para colisao
         self.rect.height -= 8
+        self.voa = False
 
         self.mask = pygame.mask.from_surface(self.images['attack']
                                              [len(self.images['attack']) - 1])
@@ -487,10 +504,9 @@ class Lobo(Esqueleto):
     def update_especifico2(self):
         """Muda a inversao"""
         if self.sector == 'walk':
-            if self.flip:
-                self.flip = False
-            else:
-                self.flip = True
+            self.flip = not self.flip
+        if self.dir[1] != 0 and self.dir[0] == 0:
+            self.flip = False
 
     def ataque_sprite(self):
         """Gera o sprite de deteccao de colisoes"""

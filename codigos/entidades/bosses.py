@@ -2,6 +2,7 @@ import random
 import sys
 import pygame.mask
 from .monstros import Esqueleto, Executor
+from .npcs import Mago
 from ..outros.armazenamento import ler_inimigos
 from ..variaveis import exp_mult, screen_size, fps
 from random import randint
@@ -22,7 +23,7 @@ class Boss1(Esqueleto):
 
         self.tipo = 'boss'
         self.is_boss = True
-        self.lock = 9, 0  # Cenario do boss a bloquear saida do player
+        self.lock = 9, 0  # Cenario do boss a bloquear saida do player e do boss
         self.unlocks = []  # Cenarios a serem desbloqueados para acesso
         for x in range(5):  # Desbloqueia o canto superior direito do mapa
             for y in range(-5, 0):
@@ -53,6 +54,22 @@ class Boss1(Esqueleto):
                 self.boost_left = self.boost_time
         else:
             self.boost_left -= 1
+
+    def on_death(self):
+        """Gera um npc ao morrer"""
+        npc = Mago(self.rect.center)
+        npc.texto = 'Você está indo bem, humano' \
+                    '/mas este foi apenas o primeiro desafio' \
+                    r'/retorne e siga para cima' \
+                    r'/mais batalhas te esperam'
+        grupos = self.groups()
+        maior_grupo, tamanho = [], 0
+        for grupo in grupos:
+            if len(grupo) > tamanho:
+                maior_grupo = grupo
+                tamanho = len(grupo)
+        maior_grupo.add(npc)
+        return npc
 
 
 class Boss2(Esqueleto):

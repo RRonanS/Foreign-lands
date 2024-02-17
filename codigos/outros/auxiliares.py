@@ -124,18 +124,19 @@ def update_to_draw(rect, updt, draw):
             updt.remove(inimigo)
 
 
-def update_pos(target, inimigos, drops, npcs):
+def update_pos(targets, inimigos, drops, npcs):
     """Atualiza a posição das entidades conforme o jogador move entre os cenários"""
-    if target is not None:
-        t, v = target
-        for i in inimigos.sprites():
-            setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
-        for i in drops.sprites():
-            setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
-        for i in npcs.sprites():
-            setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
-            if i.falando:
-                i.fala.kill()
+    if targets is not None:
+        for target in targets:
+            t, v = target
+            for i in inimigos.sprites():
+                setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
+            for i in drops.sprites():
+                setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
+            for i in npcs.sprites():
+                setattr(getattr(i, 'rect'), t, getattr(getattr(i, 'rect'), t) + v)
+                if i.falando:
+                    i.fala.kill()
 
 
 def grupo_menu(personagem, tam):
@@ -169,3 +170,33 @@ def deletar_save(save):
         print(f'O arquivofoi excluído com sucesso.')
     else:
         print(f'O arquivo não existe.')
+
+
+def mudar_cenario(mudanca, cenario, cenarios, personagem):
+    """Recebe os valores x e y na mudanca de cenario, verifica se é válida e retorna a
+    mudança a ser feita e o novo cenário"""
+    if (mudanca is not None) and ((not cenarios[cenario].lock) or cenario in personagem.desbloqueio):
+        # Tenta mudar de cenário
+        target = []
+        if mudanca[0] == 0:
+            if (cenario[0] + mudanca[1], cenario[1]) in cenarios:
+                if cenarios[(cenario[0] + mudanca[1], cenario[1])].acesso or (cenario[0] + mudanca[1], cenario[1]) \
+                        in personagem.acesso:
+                    target.append(('centerx', width * (-1 * mudanca[1])))
+                    cenario = (cenario[0] + mudanca[1], cenario[1])
+                    if mudanca[1] > 0:
+                        personagem.rect.bottomleft = 0, personagem.rect.bottomleft[1]
+                    else:
+                        personagem.rect.topright = width, personagem.rect.topright[1]
+        if mudanca[0] == 1:
+            if (cenario[0], cenario[1] + mudanca[1]) in cenarios:
+                if cenarios[(cenario[0], cenario[1] + mudanca[1])].acesso or (cenario[0], cenario[1] + mudanca[1]) \
+                        in personagem.acesso:
+                    target.append(('centery', height * (-1 * mudanca[1])))
+                    cenario = (cenario[0], cenario[1] + mudanca[1])
+                    if mudanca[1] > 0:
+                        personagem.rect.bottomleft = personagem.rect.bottomleft[0], 96
+                    else:
+                        personagem.rect.bottomleft = personagem.rect.bottomleft[0], height - 1
+        return target, cenario
+    return None, cenario

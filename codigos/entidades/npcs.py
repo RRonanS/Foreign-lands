@@ -1,11 +1,10 @@
 from math import sqrt
 from random import randint, choice
 import pygame.sprite
-
 from codigos.entidades.balao import Balao
 from codigos.variaveis import screen_size, fps
-from codigos.outros.auxiliares import img_load
 from codigos.outros.tradutor import Tradutor
+from codigos.entidades.gerenciador_imagens import imagens
 
 width, height = screen_size
 tradutor = Tradutor()
@@ -15,20 +14,7 @@ def trad(x):
     return tradutor.traduzir(x)
 
 
-imagens = {
-    'Mago': {
-        'idle':
-            img_load(pygame.image.load('arquivos/imagens/mago/Idle.png').convert_alpha(), (48, 48), (48, 48)),
-        'walk':
-            img_load(pygame.image.load('arquivos/imagens/mago/Walk.png').convert_alpha(), (48, 48), (48, 48)),
-        'special':
-            img_load(pygame.image.load('arquivos/imagens/mago/Special.png').convert_alpha(), (48, 48), (48, 48))
-    },
-    'Mercador':{
-        'idle':
-            img_load(pygame.image.load('arquivos/imagens/mercador/mercador.png').convert_alpha(), (48, 48), (48, 48))
-    }
-}
+imagens = imagens['npcs']
 
 
 class Npc(pygame.sprite.Sprite):
@@ -60,12 +46,18 @@ class Mago(Npc):
         self.images['idle'] = imagens['Mago']['idle']
         self.images['walk'] = imagens['Mago']['walk']
         self.images['special'] = imagens['Mago']['special']
+        self.texto = 'Olá viajante,\sabe onde está?' \
+                r'/Está onde outrora fora\a terra sagrada' \
+                '/Porém as trevas veem tomando\conta do nosso paraiso' \
+                '/e só você é capaz de mudar isso' \
+                '/mate todos os chefes e então me encontre na masmorra'
 
         self.image = self.images[self.status][self.cont]
         self.rect = self.image.get_rect()
         self.rect.bottomleft = pos
         self.fala = Balao((0, 0), '')
         self.falando = False
+        self.flip = False
 
     def update(self):
         self.cont += self.anim_rate
@@ -75,6 +67,7 @@ class Mago(Npc):
         if self.falando and len(self.fala.groups()) == 0:
             # Ou seja, a fala acabou, ande ate sumir
             if self.status == 'special' and self.cont == 0:
+                self.flip = True
                 self.status = 'walk'
             elif self.status != 'walk':
                 self.status = 'special'
@@ -84,13 +77,12 @@ class Mago(Npc):
                 self.kill()
 
         self.image = self.images[self.status][int(self.cont)]
+        if self.flip:
+            self.image = pygame.transform.flip(self.image, True, False)
 
     def saudar(self):
-        texto = 'Olá viajante,\sabe onde está?' \
-                r'/Está onde outrora fora\a terra sagrada' \
-                '/Porém as trevas veem tomando\conta do nosso paraiso' \
-                '/Tome cuidado para não\ser mais uma de suas vítimas' \
-                '/Ande sempre pela luz'
+        """Método para iniciar a fala do npc"""
+        texto = self.texto
         self.fala = Balao((self.rect.x, self.rect.topleft[1] + 10), texto)
         for grupo in self.groups()[1:]:
             grupo.add(self.fala)
@@ -161,31 +153,47 @@ class Villager(Npc):
 
 
 class Mercador(Npc):
+    """Npc mercador, vende itens de seu inventário"""
+
     def __init__(self, pos):
         Npc.__init__(self)
-        self.image = imagens['Mago']['idle'][0]
+        self.images = imagens['Mercador']
+        self.sector = 'idle'
+        self.index, self.anim_vel = 0, 0.5 / fps
+        self.image = self.images[self.sector][0]
         self.nome = 'Nome'
         self.mercadorias = []
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.centery = pos[0], pos[1]
         self.visao = 70
+        self.fala = None
 
     def update(self):
-        pass
+        """Animações do npc"""
+        if self.fala is not None:
+            if len(self.fala.groups()) == 0 and self.sector == 'talk':
+                # Parou de falar
+                self.sector, self.index = 'idle', 0
+                self.fala = None
+                self.falando = False
+        self.index += self.anim_vel
+        if self.index >= len(self.images[self.sector]):
+            self.index = 0
+        self.image = self.images[self.sector][int(self.index)]
 
     def falar(self):
+        """Abre o balão de fala"""
         texto = trad('ola viajante /<E> para interagir')
-        self.fala = Balao((self.rect.x, self.rect.topleft[1] + 10), texto)
+        self.fala = Balao((self.rect.x, self.rect.topleft[1]), texto)
         for grupo in self.groups()[1:]:
             grupo.add(self.fala)
         self.falando = True
+        self.sector = 'talk'
 
     def proximidade(self, entidade):
         """Trigger de proximidade"""
         if abs(sqrt((self.rect.x - entidade.rect.x) ** 2 + (self.rect.y - entidade.rect.y) ** 2)) <= self.visao:
             if not self.falando:
                 self.falar()
-                pass
             elif self.falando and len(self.fala.groups()) == 0:
                 self.falar()
-                pass

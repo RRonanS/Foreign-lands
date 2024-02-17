@@ -193,3 +193,41 @@ atualimages = {'idle': img_load(idle, sprite_size, size, True),
                'death': img_load(dead, sprite_size, size, True)
                }
 imagens['bosses']['demon'] = atualimages
+
+# Imagens do mercador
+diretorio = diretorio_base.replace('monstros/', 'mercador/')
+size = char_size[0]*0.6, char_size[1]*0.6
+sprite_size = 94, 91
+idle = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+talk = pygame.image.load(diretorio + 'Talk.png').convert_alpha()
+atualimages = {'idle': img_load(idle, sprite_size, size, True),
+               'talk': img_load(talk, sprite_size, size, True)
+               }
+imagens['npcs']['Mercador'] = atualimages
+
+# Imagens do mago
+diretorio = diretorio_base.replace('monstros/', 'mago/')
+size = char_size[0]*0.6, char_size[1]*0.6
+sprite_size = 48, 48
+idle = pygame.image.load(diretorio + 'Idle.png').convert_alpha()
+walk = pygame.image.load(diretorio + 'Walk.png').convert_alpha()
+especial = pygame.image.load(diretorio + 'Special.png').convert_alpha()
+atualimages = {'idle': img_load(idle, sprite_size, size, True),
+               'walk': img_load(walk, sprite_size, size, True),
+               'special': img_load(especial, sprite_size, size, True)
+               }
+imagens['npcs']['Mago'] = atualimages
+
+# Imagens de spawner
+diretorio = diretorio_base + 'Spawner/'
+size = char_size[0]*1, char_size[1]*1
+sprite_size = 64, 64
+altar = pygame.image.load(diretorio + 'altar.png').convert_alpha()
+death = pygame.image.load(diretorio + 'altar_death.png').convert_alpha()
+atualimages = {'idle': img_load(altar, sprite_size, size, True),
+               'walk': img_load(altar, sprite_size, size, True),
+               'attack': img_load(altar, sprite_size, size, True),
+               'death': img_load(death, sprite_size, size, True)
+               }
+
+imagens['monstros']['spawner'] = atualimages
