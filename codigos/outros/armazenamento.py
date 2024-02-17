@@ -2,6 +2,7 @@ import json
 import codigos.entidades.monstros as monstros
 import codigos.entidades.npcs as npcmod
 import codigos.itens.itens as itensmod
+from codigos.entidades import spawner
 from codigos.variaveis import monstros_arq, screen_size
 from collections import defaultdict
 import jsbeautifier
@@ -51,10 +52,11 @@ def escrever(personagem, inimigos, npcs, cenario):
         data['npcs'][str(cont)] = {
             "pos": [x.rect.centerx, x.rect.centery],
             "tipo": type(x).__name__,
-            "itens": {
+        }
+        if hasattr(x, 'mercadorias'):
+            data['npcs'][str(cont)]["itens"] = {
                 type(m).__name__: {'qtd': m.quantidade} for m in x.mercadorias
             }
-        }
 
     with open(f'{dir}player_data.json', 'w') as json_file:
         json_file.write((jsbeautifier.beautify(json.dumps(data), options)))
@@ -96,6 +98,8 @@ def ler(personagem, inimigos, npcs, bosses):
         for key in i:
             if 'Boss' in i[key]['tipo']:
                 class_ = getattr(bmod, i[key]['tipo'])
+            elif i[key]['tipo'].startswith('Spawner'):
+                class_ = getattr(spawner, i[key]['tipo'])
             else:
                 class_ = getattr(monstros, i[key]['tipo'])
             item = class_()
@@ -110,9 +114,10 @@ def ler(personagem, inimigos, npcs, bosses):
             class_ = getattr(npcmod, n[key]['tipo'])
             item = class_((n[key]['pos'][0], n[key]['pos'][1]))
             mercadorias = []
-            for merc in n[key]['itens']:
-                mercadorias.append(getattr(itensmod, merc)())
-            item.mercadorias = mercadorias
+            if 'itens' in n[key]:
+                for merc in n[key]['itens']:
+                    mercadorias.append(getattr(itensmod, merc)())
+                item.mercadorias = mercadorias
             npcs.add(item)
 
         return True, cenario
