@@ -30,6 +30,8 @@ https://forms.gle/Kx1DYiNsCzHdkjMq8
     
     - Correção do bug da animação do lobo ao descer
 
+    - Adicionado spawner de monstros
+
 # Release 0.4 (06/12/2023)
 
     - Correção de bugs no editor de cenários
