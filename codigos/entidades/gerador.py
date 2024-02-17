@@ -1,12 +1,15 @@
 # Este arquivo inclui as funções geradoras das entidades do jogo
-from .npcs import Mercador
+from .npcs import Mercador, Mago
 from ..itens.itens import Pocao_vida, Pocao_vidaGrande, Pocao_dano, Pocao_vidaGigante, \
     Pocao_regen, Pocao_velocidade
 from ..outros.armazenamento import ler_inimigos
 from ..variaveis import screen_size
 from random import randint
+from codigos.entidades import spawner
 import sys
+
 width, height = screen_size
+
 monstros = sys.modules['codigos.entidades.monstros']
 
 
@@ -31,8 +34,7 @@ def get_mercadores():
 
 def get_npcs():
     """Gera os npcs do jogo"""
-    return []
-    #  return [Mago((width//2, height//2))]
+    return [Mago((width//2, height//2))]
 
 
 def get_inimigos(inimigos):
@@ -66,4 +68,7 @@ def get_inimigos(inimigos):
                 do_rand = False  # Evita que entidades spawnem coladas
                 if item[2] > 1:
                     do_rand = True
-                aux(getattr(monstros, key), item[0], item[1], do_rand)
+                if key.startswith('Spawner'):
+                    aux(getattr(spawner, key), item[0], item[1], do_rand)
+                else:
+                    aux(getattr(monstros, key), item[0], item[1], do_rand)

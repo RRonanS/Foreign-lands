@@ -35,6 +35,10 @@ class Monstro(pygame.sprite.Sprite):
         self.droprate = {'Pocao_vida': 0.01}
         self.sounds = {}
 
+    def on_death(self):
+        """Método executado quando o monstro morrer"""
+        pass
+
     def drop(self, sorte=0):
         """Gera os drops referentes a tal inimigo"""
         from ..mapa.decorativo import Coin
@@ -206,7 +210,7 @@ class Esqueleto(Monstro):
                 self.rect.centerx += self.vel * sinal
                 # Verifica se a posição nova é válida
                 if not self.voa:
-                    if not (ver_func(self.rect.center)) or ver_func2(self.rect):
+                    if (not (ver_func(self.rect.center))) or ver_func2(self.rect):
                         self.rect.centerx -= self.vel*sinal
 
             if self.dir[1] != 0:
@@ -217,7 +221,7 @@ class Esqueleto(Monstro):
                 self.rect.centery += self.vel * sinal
                 # Verifica se a nova posição é válida
                 if not self.voa:
-                    if not (ver_func(self.rect.center)) or ver_func2(self.rect):
+                    if (not (ver_func(self.rect.center))) or ver_func2(self.rect):
                         self.rect.centery -= self.vel*sinal
             # Arredondamento do restante do movimento
             if abs(self.dir[0]) < self.vel:
@@ -492,6 +496,7 @@ class Lobo(Esqueleto):
 
         self.rect.width -= 8  # Ajustes para colisao
         self.rect.height -= 8
+        self.voa = False
 
         self.mask = pygame.mask.from_surface(self.images['attack']
                                              [len(self.images['attack']) - 1])

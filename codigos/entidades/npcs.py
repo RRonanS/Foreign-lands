@@ -3,7 +3,6 @@ from random import randint, choice
 import pygame.sprite
 from codigos.entidades.balao import Balao
 from codigos.variaveis import screen_size, fps
-from codigos.outros.auxiliares import img_load
 from codigos.outros.tradutor import Tradutor
 from codigos.entidades.gerenciador_imagens import imagens
 
@@ -16,6 +15,7 @@ def trad(x):
 
 
 imagens = imagens['npcs']
+
 
 class Npc(pygame.sprite.Sprite):
     def __init__(self):
@@ -46,12 +46,18 @@ class Mago(Npc):
         self.images['idle'] = imagens['Mago']['idle']
         self.images['walk'] = imagens['Mago']['walk']
         self.images['special'] = imagens['Mago']['special']
+        self.texto = 'Olá viajante,\sabe onde está?' \
+                r'/Está onde outrora fora\a terra sagrada' \
+                '/Porém as trevas veem tomando\conta do nosso paraiso' \
+                '/e só você é capaz de mudar isso' \
+                '/mate todos os chefes e então me encontre na masmorra'
 
         self.image = self.images[self.status][self.cont]
         self.rect = self.image.get_rect()
         self.rect.bottomleft = pos
         self.fala = Balao((0, 0), '')
         self.falando = False
+        self.flip = False
 
     def update(self):
         self.cont += self.anim_rate
@@ -61,6 +67,7 @@ class Mago(Npc):
         if self.falando and len(self.fala.groups()) == 0:
             # Ou seja, a fala acabou, ande ate sumir
             if self.status == 'special' and self.cont == 0:
+                self.flip = True
                 self.status = 'walk'
             elif self.status != 'walk':
                 self.status = 'special'
@@ -70,13 +77,12 @@ class Mago(Npc):
                 self.kill()
 
         self.image = self.images[self.status][int(self.cont)]
+        if self.flip:
+            self.image = pygame.transform.flip(self.image, True, False)
 
     def saudar(self):
-        texto = 'Olá viajante,\sabe onde está?' \
-                r'/Está onde outrora fora\a terra sagrada' \
-                '/Porém as trevas veem tomando\conta do nosso paraiso' \
-                '/Tome cuidado para não\ser mais uma de suas vítimas' \
-                '/Ande sempre pela luz'
+        """Método para iniciar a fala do npc"""
+        texto = self.texto
         self.fala = Balao((self.rect.x, self.rect.topleft[1] + 10), texto)
         for grupo in self.groups()[1:]:
             grupo.add(self.fala)
@@ -148,6 +154,7 @@ class Villager(Npc):
 
 class Mercador(Npc):
     """Npc mercador, vende itens de seu inventário"""
+
     def __init__(self, pos):
         Npc.__init__(self)
         self.images = imagens['Mercador']
