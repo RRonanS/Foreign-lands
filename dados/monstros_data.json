@@ -262,6 +262,32 @@
       "tipo": "Boss3",
       "quantidade": 1,
       "boss": true
-    }
+    },
+    "53": {
+      "pos": [3168, 224],
+      "tipo": "Spawner_esqueleto",
+      "quantidade": 1
+    },
+    "54": {
+      "pos": [352, -224],
+      "tipo": "Spawner_esqueleto",
+      "quantidade": 1
+    },
+    "55": {
+      "pos": [2464, -224],
+      "tipo": "Spawner_esqueleto",
+      "quantidade": 1
+    },
+    "56": {
+      "pos": [2464, -1568],
+      "tipo": "Spawner_olho",
+      "quantidade": 1
+    },
+    "57": {
+      "pos": [1760, -1120],
+      "tipo": "Spawner_cogumelo",
+      "quantidade": 1
   }
+
+}
 }
