@@ -1,4 +1,4 @@
-# RPG-PyGame
+# Foreign Lands
 
 Projeto de jogo RPG 2D em Python com uso da framework PyGame
 
