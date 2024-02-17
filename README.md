@@ -10,7 +10,7 @@ Formulário de feedback:
 
 https://forms.gle/Kx1DYiNsCzHdkjMq8
 
-# Release 0.5(Em trabalho)
+# Release 0.5(17/02/2024)
 
     - Correção de bugs de gameplay
     
