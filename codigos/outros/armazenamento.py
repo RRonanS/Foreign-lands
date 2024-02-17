@@ -6,6 +6,7 @@ from codigos.entidades import spawner
 from codigos.variaveis import monstros_arq, screen_size
 from collections import defaultdict
 import jsbeautifier
+import six  # Evitar erro do jsbeautifier
 
 dir = 'dados/'
 W, H = screen_size
