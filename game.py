@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from codigos.ambiente.gerenciador_musicas import GerenciadorMusica
 from codigos.ambiente.sons import mercador_saudar
+from codigos.entidades.npcs import Npc
 from codigos.entidades.personagem import Personagem
 from codigos.variaveis import screen_size, imortal, block_size, colide, \
     colide_tolerancia as tolerancia, tamanho_barra_itens, console, efeitos, load_config
@@ -301,11 +302,21 @@ def run():
 
         # Joga as sprites do buffer de comandos para as listas de uso
         for x in sprites_buffer:
+            if isinstance(x, Npc):
+                npcs.add(x)
+            else:
+                inimigos.add(x)
             sprites_update.add(x)
             sprites_buffer.remove(x)
 
-        for inimigo in [x for x in sprites_update.sprites() if (x.tipo == 'monster' or x.tipo == 'boss')]:
+        for inimigo in [x for x in sprites_update.sprites() if
+                        (x.tipo == 'monster' or x.tipo == 'boss' or x.tipo == 'spawner')]:
             # Itera sobre os inimigos que estão no range de update
+
+            if inimigo.tipo == 'spawner': # Spawn do spawner
+                if inimigo.remaining <= 0:
+                    inimigo.spawnar(sprites_buffer)
+
             if pygame.sprite.collide_mask(inimigo, personagem.sprite_ataque()) is not None:
                 if personagem.ataque:
                     # Personagem ataca inimigo em seu alcance
@@ -313,7 +324,7 @@ def run():
             if pygame.sprite.collide_mask(inimigo.ataque_sprite(), personagem) is not None:
                 # Inimigo colide com o personagem
                 if personagem.vida >= 0:
-                    # Inicia um movimento de ataquea
+                    # Inicia um movimento de ataque
                     inimigo.atacar()
                 inimigo.dir = 0, 0
                 if inimigo.ataque:
@@ -375,6 +386,11 @@ def run():
                     personagem.desbloqueio.append(inimigo.lock)
                     for x in inimigo.unlocks:
                         personagem.acesso.append(x)
+                    # Para gerar o npc falando após morte de boss
+                    sprite = inimigo.on_death()
+                    if sprite is not None:
+                        sprites_buffer.add(sprite)
+
                 personagem.exp += inimigo.exp * (1 + personagem.inteligencia/100)
                 inimigo.kill()
                 for drop in inimigo.drop(sorte=personagem.sorte):
