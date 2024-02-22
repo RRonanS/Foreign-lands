@@ -2,6 +2,8 @@
 
 Projeto de jogo RPG 2D em Python com uso da framework PyGame
 
+![alt text](https://github.com/RRonanS/Foreign-lands/blob/main/imagens/spawn_poluido.png?raw=true)
+
 Pasta com executáveis:
 
 https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sharing
@@ -9,6 +11,8 @@ https://drive.google.com/drive/folders/14PY_YTGkWd9aYjKPUzAe7rHnH7qq0EJ5?usp=sha
 Formulário de feedback:
 
 https://forms.gle/Kx1DYiNsCzHdkjMq8
+
+
 
 # Release 0.5(17/02/2024)
 
