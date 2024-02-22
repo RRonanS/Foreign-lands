@@ -1,6 +1,6 @@
 # Foreign Lands
 
-Projeto de jogo RPG 2D em Python com uso da framework PyGame
+Avance pelo mapa, mate monstros e fique mais forte para enfrentar os bosses. Libere novas poções e zonas para explorar, troque moedas por itens ou até mesmo por sua sobrevivência, tudo isso num mundo 2D criado dentro do Python com auxílio do Pygame. Teste já!
 
 ![alt text](https://github.com/RRonanS/Foreign-lands/blob/main/imagens/spawn_poluido.png?raw=true)
 
